@@ -1,6 +1,6 @@
-# TODO - Your title
+# Using Detnets for Operation and Control
 
-This is the working area for the individual Internet-Draft, "TODO - Your title".
+This is the working area for the individual Internet-Draft, "Using Detnets for Operation and Control".
 
 * [Editor's Copy](https://kiranmak.github.io/draft-detnet-ocn/#go.draft-km-detnet-for-ocn.html)
 * [Datatracker Page](https://datatracker.ietf.org/doc/draft-km-detnet-for-ocn)
