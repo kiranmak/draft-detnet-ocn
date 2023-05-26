@@ -9,19 +9,19 @@ number:
 date:
 consensus: true
 v: 3
-area: AREA
-workgroup: WG Working Group
+area: "Routing"
+workgroup: "Deterministic Networking"
 keyword:
  - next generation
  - unicorn
  - sparkling distributed ledger
 venue:
-  group: WG
-  type: Working Group
-  mail: WG@example.com
-  arch: https://example.com/WG
-  github: USER/REPO
-  latest: https://example.com/LATEST
+  group: "Deterministic Networking"
+  type: "Working Group"
+  mail: "detnet@ietf.org"
+  arch: "https://mailarchive.ietf.org/arch/browse/detnet/"
+  github: "kiranmak/draft-detnet-ocn"
+  latest: "https://kiranmak.github.io/draft-detnet-ocn/draft-km-detnet-for-ocn.html"
 
 author:
  -
