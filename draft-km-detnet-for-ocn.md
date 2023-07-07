@@ -265,7 +265,7 @@ refered to.
 type of network (Ethernet, IP, wireless, etc. The model assumes that the
 network is capable of providing network services and resources necessary of the
 application specific operations and control.
- 
+
 Depending on the design of the usecase the process controller functionality
 (oc-point) may reside as a software module in the data application or as a
 separate module. When deployed as a separate module, another connectivity
@@ -274,11 +274,11 @@ of the scope of this document.
 
 The applications will use an communication interface between oc-point and
 sensor-point to receive sensory data and similarly interface between oc-point
-to actuation-point to execute a single or a sequence of control instructions. 
+to actuation-point to execute a single or a sequence of control instructions.
 
 This abstraction provides an additional layer of  protection in the sense that
 the traffic patterns between the reference points are well defined so any
-exceptions can be easily caught. 
+exceptions can be easily caught.
 
 ## Traffic Patterns {#ocn-pattern}
 
