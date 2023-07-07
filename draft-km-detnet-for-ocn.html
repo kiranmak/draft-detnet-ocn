@@ -15,23 +15,23 @@ software-defined application logic. In order to support process automation
 remotely, not only Deterministic Networks (DetNet) are needed but an interface
 between the application endpoints to the devices over a DetNet infrastructure
 is also required. This document describes an interface to deterministic
-networks from the view of end-points to support process control and operations. 
+networks from the view of endpoints to support process control and operations. 
     " name="description">
-<meta content="xml2rfc 3.17.1" name="generator">
+<meta content="xml2rfc 3.17.4" name="generator">
 <meta content="Internet-Draft" name="keyword">
 <meta content="draft-km-detnet-for-ocn-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.17.1
-    Python 3.11.3
-    appdirs 1.4.4
+  xml2rfc 3.17.4
+    Python 3.11.4
     ConfigArgParse 1.5.3
-    google-i18n-address 2.5.2
+    google-i18n-address 3.1.0
     intervaltree 3.1.0
     Jinja2 3.1.2
     lxml 4.9.2
+    platformdirs 3.8.0
     pycountry 22.3.5
     PyYAML 6.0
-    requests 2.30.0
+    requests 2.31.0
     setuptools 67.7.2
     six 1.16.0
     wcwidth 0.2.6
@@ -616,6 +616,7 @@ sub, sup {
   clear: left;
   float: left;
   text-align: right;
+  margin-right: 1ch;
 }
 #identifiers dd {
   margin: 0;
@@ -1054,11 +1055,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">ocn-in-detnets</td>
-<td class="right">May 2023</td>
+<td class="right">July 2023</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Makhijani, et al.</td>
-<td class="center">Expires 27 November 2023</td>
+<td class="center">Expires 8 January 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1071,12 +1072,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-km-detnet-for-ocn-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2023-05-26" class="published">26 May 2023</time>
+<time datetime="2023-07-07" class="published">7 July 2023</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2023-11-27">27 November 2023</time></dd>
+<dd class="expires"><time datetime="2024-01-08">8 January 2024</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1106,7 +1107,7 @@ software-defined application logic. In order to support process automation
 remotely, not only Deterministic Networks (DetNet) are needed but an interface
 between the application endpoints to the devices over a DetNet infrastructure
 is also required. This document describes an interface to deterministic
-networks from the view of end-points to support process control and operations.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+networks from the view of endpoints to support process control and operations.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <div id="status-of-memo">
 <section id="section-boilerplate.1">
@@ -1127,7 +1128,7 @@ networks from the view of end-points to support process control and operations.<
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 27 November 2023.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 8 January 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1171,24 +1172,27 @@ networks from the view of end-points to support process control and operations.<
                 <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-connected-controllers-senso" class="internal xref">Connected Controllers, Sensors and Actuators</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
-                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-traffic-patterns" class="internal xref">Traffic Patterns</a></p>
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-generalized-communication-m" class="internal xref">Generalized Communication Model</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3">
+                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-traffic-patterns" class="internal xref">Traffic Patterns</a></p>
 <ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2.2.1">
-                    <p id="section-toc.1-1.3.2.2.2.1.1"><a href="#section-3.2.1" class="auto internal xref">3.2.1</a>.  <a href="#name-control-loops" class="internal xref">Control Loops</a></p>
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3.2.1">
+                    <p id="section-toc.1-1.3.2.3.2.1.1"><a href="#section-3.3.1" class="auto internal xref">3.3.1</a>.  <a href="#name-control-loops" class="internal xref">Control Loops</a></p>
 </li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2.2.2">
-                    <p id="section-toc.1-1.3.2.2.2.2.1"><a href="#section-3.2.2" class="auto internal xref">3.2.2</a>.  <a href="#name-periodicity" class="internal xref">Periodicity</a></p>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3.2.2">
+                    <p id="section-toc.1-1.3.2.3.2.2.1"><a href="#section-3.3.2" class="auto internal xref">3.3.2</a>.  <a href="#name-periodicity" class="internal xref">Periodicity</a></p>
 </li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2.2.3">
-                    <p id="section-toc.1-1.3.2.2.2.3.1"><a href="#section-3.2.3" class="auto internal xref">3.2.3</a>.  <a href="#name-ordering" class="internal xref">Ordering</a></p>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3.2.3">
+                    <p id="section-toc.1-1.3.2.3.2.3.1"><a href="#section-3.3.3" class="auto internal xref">3.3.3</a>.  <a href="#name-ordering" class="internal xref">Ordering</a></p>
 </li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2.2.4">
-                    <p id="section-toc.1-1.3.2.2.2.4.1"><a href="#section-3.2.4" class="auto internal xref">3.2.4</a>.  <a href="#name-urgency" class="internal xref">Urgency</a></p>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3.2.4">
+                    <p id="section-toc.1-1.3.2.3.2.4.1"><a href="#section-3.3.4" class="auto internal xref">3.3.4</a>.  <a href="#name-urgency" class="internal xref">Urgency</a></p>
 </li>
                 </ul>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3">
-                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-communication-patterns" class="internal xref">Communication Patterns</a></p>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.4">
+                <p id="section-toc.1-1.3.2.4.1"><a href="#section-3.4" class="auto internal xref">3.4</a>.  <a href="#name-communication-patterns" class="internal xref">Communication Patterns</a></p>
 </li>
             </ul>
 </li>
@@ -1227,7 +1231,7 @@ networks from the view of end-points to support process control and operations.<
             <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-detnet-potential-approach" class="internal xref">DetNet Potential Approach</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
-                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-application-association-to-" class="internal xref">Application association to Forwarding sub-layer</a></p>
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-application-association-to-" class="internal xref">Application association to Forwarding sub layer</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
                 <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-encapsulation" class="internal xref">Encapsulation</a></p>
@@ -1276,13 +1280,13 @@ networks from the view of end-points to support process control and operations.<
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
 <p id="section-1-1">Process automation systems involve operating a piece of equipment (such as
-actuating and/or sensing field-devices). The communication between the
-controllers and field-devices exhibits a well-defined set of behaviors and
+actuating and/or sensing field devices). The communication between the
+controllers and field devices exhibits a well-defined set of behaviors and
 has specific characteristics: the delivery of a control-command to a
-machine must be executed within the time-frame specified by a controller or
+machine must be executed within the time frame specified by a controller or
 by an application to provide reliable and secure operation.  A low or zero
 tolerance to latency and packet losses (among other things) is implied.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">The endpoints (controllers and field-devices) embody machine-to-machine
+<p id="section-1-2">The endpoints (controllers and field devices) embody machine-to-machine
 communications to facilitate both remote and local process automation. In this
 document, networks that support all the characteristics of remote process
 automation are referred to as Operation and Control Networks (OCNs) for
@@ -1291,13 +1295,14 @@ convenience. This document describes using DetNet to enable OCN applications
 reliability, and for packet loss mitigation.<a href="#section-1-2" class="pilcrow">¶</a></p>
 <p id="section-1-3">This document defines the interface between an OCN application and DetNet
 framework. i.e., using DetNet services for communication between the
-controllers and the field-devices. This interface is used by an application to
+controllers and the field devices. This interface is used by an application to
 express its network-specific requirements. This document presents the
-perspective of an end-system. Because the controller-endpoint of the
-application stack is based on IP, the discussion is specific to the IP-enabled
-DetNet data planes <span>[<a href="#DETNET-DP" class="cite xref">DETNET-DP</a>]</span>. For the other type of field-devices,
+perspective of an end system. Because IP network stack is widely used by
+general-purpose applications and provides more connection flexibility to end
+systems, the scope our discussion is specific to the IP-enabled
+DetNet data planes <span>[<a href="#DETNET-DP" class="cite xref">DETNET-DP</a>]</span>. For the other type of field devices,
 service level proxy is assumed (section  4.1 in RFC8655).<a href="#section-1-3" class="pilcrow">¶</a></p>
-<p id="section-1-4">By mapping OCNs to DetNet helps with developing a better understanding of how
+<p id="section-1-4">Mapping OCNs to DetNet helps with developing a better understanding of how
 DetNets can be used in such scenarios. To this end, the document provides a
 background on <a href="#background" class="auto internal xref">Section 3</a> the type of traffic patterns in OCN applications.
 It proposes an interface between an application and DetNet, and a potential
@@ -1327,11 +1332,11 @@ and physical access control mechanisms. Source: <span>[<a href="#NIST-OT" class=
 </li>
         <li class="normal" id="section-2-1.2">
           <span class="break"></span><dl class="dlParallel" id="section-2-1.2.1">
-            <dt id="section-2-1.2.1.1">Industry Automation:</dt>
+            <dt id="section-2-1.2.1.1">Industral Automation:</dt>
             <dd style="margin-left: 1.5em" id="section-2-1.2.1.2">
-              <p id="section-2-1.2.1.2.1">Mechanisms that enable machine-to-machine communication
-by use of technologies that enable automatic control and operation of industrial
-devices and processes leading to minimizing human intervention.<a href="#section-2-1.2.1.2.1" class="pilcrow">¶</a></p>
+              <p id="section-2-1.2.1.2.1">Mechanisms that enable machine-to-machine communication by use of
+technologies that enable automatic control and operation of industrial devices
+and processes leading to minimizing human intervention.<a href="#section-2-1.2.1.2.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 </dl>
@@ -1364,7 +1369,7 @@ the system's output is used as input for future operations.<a href="#section-2-1
             <dd style="margin-left: 1.5em" id="section-2-1.5.1.2">
               <p id="section-2-1.5.1.2.1">Industrial control networks are the
 interconnection of equipment used for the operation, control or monitoring of
-machines in the industry environment. It involves a different level of
+machines in the industral environment. It involves a different level of
 communication - between fieldbus devices, digital controllers and software
 applications<a href="#section-2-1.5.1.2.1" class="pilcrow">¶</a></p>
 </dd>
@@ -1411,7 +1416,7 @@ terminal and HMI software to control and monitor equipment.<a href="#section-2-1
       <h2 id="name-background-on-industrial-co">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-background-on-industrial-co" class="section-name selfRef">Background on Industrial Control Systems</a>
       </h2>
-<p id="section-3-1">An industry control network interconnects devices used to operate, control and
+<p id="section-3-1">An industrial control network interconnects devices used to operate, control and
 monitor physical equipment in industrial environments. <a href="#icn-arch" class="auto internal xref">Figure 1</a> below shows
 such systems' reference model and functional components. Closest to the
 physical equipment are field devices (actuators and sensors) that connect to
@@ -1422,7 +1427,13 @@ controller functions along with exchanging data with the applications.<a href="#
 <p id="section-3-2">A factory floor is divided into cell-sites. The PLCs or other types of
 controllers are physically located close to the equipment in the cell-sites.
 The collection of monitoring, status and sensing data is first done on the site
-and then transmitted over secure channels to the cloud applications.<a href="#section-3-2" class="pilcrow">¶</a></p>
+and then transmitted over secure channels to the data applications for
+aggregation and further processing. These applications can be hosted
+in remote cloud infrastructure, but are also often hosted within a
+limited domain environment, controlled by a single operator, like
+on-premise, at the edge or in a private cloud. Both options gain
+from infrastructure that scales out, has elastic compute and storage
+resources, so they will both be referred to as cloud in the following sections.<a href="#section-3-2" class="pilcrow">¶</a></p>
 <span id="name-functions-in-industrial-con"></span><div id="icn-arch">
 <figure id="figure-1">
         <div class="lang-drawing sourcecode" id="section-3-3.1">
@@ -1450,19 +1461,14 @@ and then transmitted over secure channels to the cloud applications.<a href="#se
 <a href="#name-functions-in-industrial-con" class="selfRef">Functions in Industrial Control Networks</a>
         </figcaption></figure>
 </div>
-<p id="section-3-4">What is changing now is that cloud applications are integrating process
-control functions to improve automation and to make real-time decisions,
+<p id="section-3-4">What is changing now is that data applications are integrating process control
+functions to improve automation and to make real-time decisions,
 programmatically. The equipment control and  collection of data generated by
-the sensors can be done directly over DetNet-enabled wide-area networks as
-illustrated in <a href="#new-arch" class="auto internal xref">Figure 2</a>.<a href="#section-3-4" class="pilcrow">¶</a></p>
-<p id="section-3-5">Inline with DetNet, cloud applications can also be hosted within a limited
-domain environment, controlled by a single operator. The term is implied to
-indicate that applications use infrastructure that scales out, has elastic
-compute and storage resources. The infrastructure may be on-premise, at the
-edge or in private cloud.<a href="#section-3-5" class="pilcrow">¶</a></p>
+the sensors should be possible over small or large-scale deterministic networks
+as illustrated in <a href="#new-arch" class="auto internal xref">Figure 2</a>.<a href="#section-3-4" class="pilcrow">¶</a></p>
 <span id="name-converged-cloud-based-indus"></span><div id="new-arch">
 <figure id="figure-2">
-        <div class="lang-drawing sourcecode" id="section-3-6.1">
+        <div class="lang-drawing sourcecode" id="section-3-5.1">
 <pre>
                +-+-+-+-+-+-+-+-+
                |     Data Apps |      Integrated Apps with
@@ -1483,13 +1489,13 @@ edge or in private cloud.<a href="#section-3-5" class="pilcrow">¶</a></p>
 <a href="#name-converged-cloud-based-indus" class="selfRef">Converged Cloud based Industrial Control Networks</a>
         </figcaption></figure>
 </div>
-<p id="section-3-7">One particular motivation is to provide the behavior of a serial bus between
+<p id="section-3-6">One particular motivation is to provide the behavior of a field bus between
 the cloud and the actuators/sensors with the same assurance of reliability and
-latency, albeit over wide-area networks (WAN). This is evident from many
-industry control applications, such as factory automation <span>[<a href="#FACTORY" class="cite xref">FACTORY</a>]</span>, PLC
+latency, albeit over wide area networks (WAN). This is evident from many
+industrial control applications, such as factory automation <span>[<a href="#FACTORY" class="cite xref">FACTORY</a>]</span>, PLC
 virtualization <span>[<a href="#VIRT-PLC" class="cite xref">VIRT-PLC</a>]</span>, power grid operations <span>[<a href="#PTP-GRID" class="cite xref">PTP-GRID</a>]</span>, etc. that are now
 expected to operate in the cloud by leveraging virtualization and shared
-infrastructure wherever possible.<a href="#section-3-7" class="pilcrow">¶</a></p>
+infrastructure wherever possible.<a href="#section-3-6" class="pilcrow">¶</a></p>
 <div id="connected-controllers-sensors-and-actuators">
 <section id="section-3.1">
         <h3 id="name-connected-controllers-senso">
@@ -1518,115 +1524,152 @@ urgent messages regarding malfunctioning in certain equipment, cell-sites, or
 zones.<a href="#section-3.1-2.3" class="pilcrow">¶</a>
 </li>
         </ul>
-<p id="section-3.1-3">Almost all control systems have at least one controlling entity on one end, and
-two other end points - the sensors and actuators. The interface to sensors and
-actuators is through the controllers; i.e., applications do not directly
-interact with the field-devices. Neither actuators nor sensors perform
-decision-making tasks. This responsibility belongs to the controller.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.1-3">In many control systems there is at least one controller (or server) entity on
+one end and two other entities - the sensors and actuators on the other end.
+The communication with sensors and actuators is through the controller entity;
+as such data applications do not directly interact with the field devices.
+Neither actuators nor sensors perform decision-making tasks. This
+responsibility belongs to the controller.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="generalized-communication-model">
+<section id="section-3.2">
+        <h3 id="name-generalized-communication-m">
+<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-generalized-communication-m" class="section-name selfRef">Generalized Communication Model</a>
+        </h3>
+<p id="section-3.2-1">To describe networked process control behavior a conceptual communication model
+is used so that the data applications do not concern with the details of the
+networks realizing operations and control. We refer to this model as operation
+and control network (OCN). The scope of the model is<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.2-2.1">Logical reference points: identify an endpoint's role or function as
+sensor-point, actuation-point, or operation &amp; control point (oc-point for
+short). Note: term 'oc-point' is used to avoid confusion with network
+controllers and term 'fd-point' is used when both type of field devices are
+refered to.<a href="#section-3.2-2.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-3.2-2.2">Interface specification: in terms of associated traffic patterns between the
+endpoints as described below in <a href="#ocn-pattern" class="auto internal xref">Section 3.3</a>. The interface may be any
+type of network (Ethernet, IP, wireless, etc. The model assumes that the
+network is capable of providing network services and resources necessary of the
+application specific operations and control.<a href="#section-3.2-2.2" class="pilcrow">¶</a>
+</li>
+        </ul>
+<p id="section-3.2-3">Depending on the design of the usecase the process controller functionality
+(oc-point) may reside as a software module in the data application or as a
+separate module. When deployed as a separate module, another connectivity
+interface between the data application and oc-point will be needed and is out
+of the scope of this document.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.2-4">The applications will use an communication interface between oc-point and
+sensor-point to receive sensory data and similarly interface between oc-point
+to actuation-point to execute a single or a sequence of control instructions.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
+<p id="section-3.2-5">This abstraction provides an additional layer of  protection in the sense that
+the traffic patterns between the reference points are well defined so any
+exceptions can be easily caught.<a href="#section-3.2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="ocn-pattern">
-<section id="section-3.2">
+<section id="section-3.3">
         <h3 id="name-traffic-patterns">
-<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-traffic-patterns" class="section-name selfRef">Traffic Patterns</a>
+<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-traffic-patterns" class="section-name selfRef">Traffic Patterns</a>
         </h3>
-<p id="section-3.2-1">For either local or wide area, the process automation activities over the
-network can generate a variety of traffic patterns between the controllers and
-field-devices such as:<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.3-1">For either local or wide area, the process automation activities over the
+network can generate a variety of traffic patterns between the oc-point and
+field devices such as:<a href="#section-3.3-1" class="pilcrow">¶</a></p>
 <div id="c-loop">
-<section id="section-3.2.1">
+<section id="section-3.3.1">
           <h4 id="name-control-loops">
-<a href="#section-3.2.1" class="section-number selfRef">3.2.1. </a><a href="#name-control-loops" class="section-name selfRef">Control Loops</a>
+<a href="#section-3.3.1" class="section-number selfRef">3.3.1. </a><a href="#name-control-loops" class="section-name selfRef">Control Loops</a>
           </h4>
-<p id="section-3.2.1-1">The equipment being operated upon is sensitive to when a command request
+<p id="section-3.3.1-1">The equipment being operated upon is sensitive to when a command request
 actually executes. An actuator upon receiving a command (function code) will
 immediately perform the corresponding action. It is the responsibility of network
 and controller to ensure that behavior of the sensor and actuator follows the
-expectations of applications.<a href="#section-3.2.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.2.1-2">For several such applications, the knowledge of a successful operation is equally
+expectations of applications.<a href="#section-3.3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-2">For several such applications, the knowledge of a successful operation is equally
 critical to advance to the next steps; therefore, getting the response back in
 a specified time is required, leading to a knowledge of timing. These types of
-bounded-time request and response mechanisms are called control loops.<a href="#section-3.2.1-2" class="pilcrow">¶</a></p>
-<p id="section-3.2.1-3">Unlike general purpose applications, commands cannot be batched, the
+bounded-time request and response mechanisms are called control loops.<a href="#section-3.3.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-3">Unlike general purpose applications, commands cannot be batched, the
 parameters of the command that will follow depends on the result of the previous one.
 Each request in control loop takes up a minimal payload size (function code,
-value, device or bus address) and will often fit in a single short packet.<a href="#section-3.2.1-3" class="pilcrow">¶</a></p>
-<p id="section-3.2.1-4">In Detnet-enabled network, it can be imagined as a small series of packets with
-the same flow identifier, but with different latency constraints.<a href="#section-3.2.1-4" class="pilcrow">¶</a></p>
-<p id="section-3.2.1-5">It is required to support control loops where each request presents its own
-latency constraints to the network and where commands are small sized packets.<a href="#section-3.2.1-5" class="pilcrow">¶</a></p>
+value, device or bus address) and will often fit in a single short packet.<a href="#section-3.3.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-4">In Detnet-enabled network, it can be imagined as a small series of packets with
+the same flow identifier, but with different latency constraints.<a href="#section-3.3.1-4" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-5">It is required to support control loops where each request presents its own
+latency constraints to the network and where commands are small sized packets.<a href="#section-3.3.1-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="ocn-intervals">
-<section id="section-3.2.2">
+<section id="section-3.3.2">
           <h4 id="name-periodicity">
-<a href="#section-3.2.2" class="section-number selfRef">3.2.2. </a><a href="#name-periodicity" class="section-name selfRef">Periodicity</a>
+<a href="#section-3.3.2" class="section-number selfRef">3.3.2. </a><a href="#name-periodicity" class="section-name selfRef">Periodicity</a>
           </h4>
-<p id="section-3.2.2-1">Sensors emit data at regular intervals, but this information may not always be
+<p id="section-3.3.2-1">Sensors emit data at regular intervals, but this information may not always be
 time-constrained. Usually, controllers are programmed to tolerate and record
 intermittent losses.  Automation software can make a more informed decision by
 monitoring a lot of sensor data.  Thus, the traffic volume generated by sensors is
 expected to high.  The periodicity of each sensor can also vary based on the
-equipment.<a href="#section-3.2.2-1" class="pilcrow">¶</a></p>
-<p id="section-3.2.2-2">It is required that network capacity is planned appropriately for the periodic
+equipment.<a href="#section-3.3.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.3.2-2">It is required that network capacity is planned appropriately for the periodic
 traffic generated from the different sensors. The periodic interval should also
 be preserved in the network because any variations could provide false
-indications that the equipment is misbehaving.<a href="#section-3.2.2-2" class="pilcrow">¶</a></p>
+indications that the equipment is misbehaving.<a href="#section-3.3.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="ordering">
-<section id="section-3.2.3">
+<section id="section-3.3.3">
           <h4 id="name-ordering">
-<a href="#section-3.2.3" class="section-number selfRef">3.2.3. </a><a href="#name-ordering" class="section-name selfRef">Ordering</a>
+<a href="#section-3.3.3" class="section-number selfRef">3.3.3. </a><a href="#name-ordering" class="section-name selfRef">Ordering</a>
           </h4>
-<p id="section-3.2.3-1">In real-time process control communications, out of order message processing
+<p id="section-3.3.3-1">In real-time process control communications, out of order message processing
 will lead to costly failures of operations.  Messages such as request and
 reply, or a sequence of commands may be correlated therefore, both time
 constraints and order must be preserved. The traffic is generated when software
-triggers control-commands to field-devices. This may not always map into
-asynchronous DetNet flows if observation interval is not known.<a href="#section-3.2.3-1" class="pilcrow">¶</a></p>
-<p id="section-3.2.3-2">The network should be capable of supporting sporadic on-demand short-term flows.
+triggers control-commands to field devices. This may not always map into
+asynchronous DetNet flows if observation interval is not known.<a href="#section-3.3.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.3.3-2">The network should be capable of supporting sporadic on-demand short-term flows.
 This does not imply instantaneous resource provisioning, instead it would be
 more efficient if the provisioned resources could be shared for such
-asynchronous traffic patterns.<a href="#section-3.2.3-2" class="pilcrow">¶</a></p>
-<p id="section-3.2.3-3">Another consideration with ordering is that both actuators and sensors are
+asynchronous traffic patterns.<a href="#section-3.3.3-2" class="pilcrow">¶</a></p>
+<p id="section-3.3.3-3">Another consideration with ordering is that both actuators and sensors are
 low-resource devices.  They can not buffer multiple packets and execute them in
 order while maintaining the latency bounds of each command execution.  This
-means the network must pace packets that may arrive early.<a href="#section-3.2.3-3" class="pilcrow">¶</a></p>
+means the network must pace packets that may arrive early.<a href="#section-3.3.3-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="urgency">
-<section id="section-3.2.4">
+<section id="section-3.3.4">
           <h4 id="name-urgency">
-<a href="#section-3.2.4" class="section-number selfRef">3.2.4. </a><a href="#name-urgency" class="section-name selfRef">Urgency</a>
+<a href="#section-3.3.4" class="section-number selfRef">3.3.4. </a><a href="#name-urgency" class="section-name selfRef">Urgency</a>
           </h4>
-<p id="section-3.2.4-1">Besides latency constrained and periodic messages, sensors also report failures
+<p id="section-3.3.4-1">Besides latency constrained and periodic messages, sensors also report failures
 as fault notifications, such as pressure valve failure, abnormally high
 humidity, etc. These messages must be delivered with utmost urgency and
-immediately.<a href="#section-3.2.4-1" class="pilcrow">¶</a></p>
+immediately.<a href="#section-3.3.4-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="communication-patterns">
-<section id="section-3.3">
+<section id="section-3.4">
         <h3 id="name-communication-patterns">
-<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-communication-patterns" class="section-name selfRef">Communication Patterns</a>
+<a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-communication-patterns" class="section-name selfRef">Communication Patterns</a>
         </h3>
-<p id="section-3.3-1">Control systems follow a specific communication discipline. The field-devices
+<p id="section-3.4-1">Control systems follow a specific communication discipline. The field devices
 (sensors and actuators) are always controlled, i.e., interact with the system
-through controllers in the following manner:-<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+through controllers in the following manner:-<a href="#section-3.4-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.3-2.1">Sensor to controller: data emitted at periodic interval providing
+<li class="normal" id="section-3.4-2.1">Sensor to controller: data emitted at periodic interval providing
 status/health of the environment or equipment. The  traffic volume for this
 communication is determined by the payload size of each  sensor data and the
-interval. These are a kind of synchronous Detnet flows but with much higher time intervals; still the inter-packet gap should be minimum.<a href="#section-3.3-2.1" class="pilcrow">¶</a>
+interval. These are a kind of synchronous Detnet flows but with much higher time intervals; still the inter-packet gap should be minimum.<a href="#section-3.4-2.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-3.3-2.2">Controller to/from actuator: the commands/instructions to write or read.
+          <li class="normal" id="section-3.4-2.2">Controller to/from actuator: the commands/instructions to write or read.
 Actuators generally do not initiate a command unless requested by the
 controller. Actuators will often execute a command, read the corresponding
 result, and send that in response to the original write command.  The traffic
-profile will be balanced in both directions due to requests/ response behavior. These are like asynchronous flows but without the observation interval constraint.<a href="#section-3.3-2.2" class="pilcrow">¶</a>
+profile will be balanced in both directions due to requests/ response behavior. These are like asynchronous flows but without the observation interval constraint.<a href="#section-3.4-2.2" class="pilcrow">¶</a>
 </li>
         </ul>
 </section>
@@ -1642,7 +1685,7 @@ profile will be balanced in both directions due to requests/ response behavior. 
 means that the controller is on-premises close to the equipment, sensor data is
 first collected on-site, and then bulk transmitted to the enterprise cloud for
 further processing.<a href="#section-4-1" class="pilcrow">¶</a></p>
-<p id="section-4-2">To support delivering remote instructions to the machines over wide-area
+<p id="section-4-2">To support delivering remote instructions to the machines over wide area
 networks using Deterministic Network data plane architecture
 <span>[<a href="#DETNET-DP" class="cite xref">DETNET-DP</a>]</span> and corresponding data plane DetNet over IP
 <span>[<a href="#DETNET-IP" class="cite xref">DETNET-IP</a>]</span> mechanisms apply as discussed in <a href="#detnet-rel" class="auto internal xref">Section 4.1</a>. Later in
@@ -1696,7 +1739,7 @@ observation interval) and synchronous (with repeating schedules) flow behaviors
 (Section 4.3.2 in <span>[<a href="#DETNET-DP" class="cite xref">DETNET-DP</a>]</span>). The granularity of traffic treatment
 is at the flow level specified by 6-tuple information, including DSCP.<a href="#section-4.1-4" class="pilcrow">¶</a></p>
 <p id="section-4.1-5">Realistically, leveraging DetNets for Operations and Control (OCN) traffic
-patterns <a href="#ocn-pattern" class="auto internal xref">Section 3.2</a> directly depends on how DetNets will provide network
+patterns <a href="#ocn-pattern" class="auto internal xref">Section 3.3</a> directly depends on how DetNets will provide network
 knowledge to the applications.<a href="#section-4.1-5" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1706,7 +1749,7 @@ knowledge to the applications.<a href="#section-4.1-5" class="pilcrow">¶</a></p
 <a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-detnet-related-consideratio" class="section-name selfRef">DetNet related Considerations and Dependencies</a>
         </h3>
 <p id="section-4.2-1">A DetNet-aware node should express the network requirements as part of either
-forwarding sublayer or service-sublayer. <span>[<a href="#DETNET-IP" class="cite xref">DETNET-IP</a>]</span> doesnot specify
+forwarding sublayer or service sublayer. <span>[<a href="#DETNET-IP" class="cite xref">DETNET-IP</a>]</span> doesnot specify
 the interface to how those sublayers are mapped. This can be a non-trivial
 task, as an OCN-application, will first need some way to request its DetNet
 service provider (DN-SP). The DN-SP is expected to allocate resources and
@@ -1773,7 +1816,7 @@ to the cloud.  Historical reasons for this approach do not apply anymore.  Due
 to growth in sensor data, it now requires a much larger on-site storage
 infrastructure which is expensive.  Applications also expect real-time
 streaming telemetry data.  Although latency constraints are not as strict as
-for control loops, sensor data need to preserve periodicity (<a href="#ocn-intervals" class="auto internal xref">Section 3.2.2</a>),
+for control loops, sensor data need to preserve periodicity (<a href="#ocn-intervals" class="auto internal xref">Section 3.3.2</a>),
 thus could use DetNet service support.<a href="#section-4.2.3-1" class="pilcrow">¶</a></p>
 <p id="section-4.2.3-2">Leveraging DetNet could eliminate split traffic flows by collecting the
 sensor data by the applications. This also allows  controllers to be run and
@@ -1799,7 +1842,7 @@ may be applied on a single message or on a group of messages.<a href="#section-4
 requirement. Sensors emit data at regular interval but this type of
 information may not always be time-constrained. The gaps between the period
 can provide an indication to the controller about communication or other
-problems.<a href="#section-4.2.4-2.2" class="pilcrow">¶</a>
+                                                                   problems.<a href="#section-4.2.4-2.2" class="pilcrow">¶</a>
 </li>
             <li class="normal" id="section-4.2.4-2.3">Additionally, some faults and alarm messages are urgent reports and must be marked and
 transmitted accordingly.<a href="#section-4.2.4-2.3" class="pilcrow">¶</a>
@@ -1821,11 +1864,11 @@ destination in a specific order.<a href="#section-4.2.4-3" class="pilcrow">¶</a
           <h4 id="name-security">
 <a href="#section-4.2.5" class="section-number selfRef">4.2.5. </a><a href="#name-security" class="section-name selfRef">Security</a>
           </h4>
-<p id="section-4.2.5-1">Industry control networks also have split security boundaries. They have been
+<p id="section-4.2.5-1">Operations and control networks also have split security boundaries. They have been
 designed to be air-gapped or secure by separation. Current systems have strict
 admission control, ingress and egress policies.<a href="#section-4.2.5-1" class="pilcrow">¶</a></p>
 <p id="section-4.2.5-2">From network layer security perspective, how DetNet-enabled network deals with
-security falls in the <span>[<a href="#RFC9055" class="cite xref">RFC9055</a>]</span>, the end-systems expect those mechanisms in
+security falls in the <span>[<a href="#RFC9055" class="cite xref">RFC9055</a>]</span>, the end systems expect those mechanisms in
 place. In particular if additional information is distributed for datapath
 decisions, integrity protection as per Section  7.2 of <span>[<a href="#RFC9055" class="cite xref">RFC9055</a>]</span>.<a href="#section-4.2.5-2" class="pilcrow">¶</a></p>
 <p id="section-4.2.5-3">The border gateways and firewalls will be more prone to errors related to
@@ -1876,13 +1919,13 @@ deal with them within the DetNet framework, we discuss few possibilities.<a href
 DetNet-aware Network. Note, that it is just an interface and blind to the
 internal implementation of such networks.<a href="#section-5-2" class="pilcrow">¶</a></p>
 <p id="section-5-3">The DetNet architecture does not describe how DetNet-aware node can design DetNet sub-layers.
- But even from the view of an end-system the separation between
+ But even from the view of an end system the separation between
 forwarding and service sublayer functions should be maintained. This means, the DSCP should not be
 overloaded and DetNet-IP forwarding layer should be extended.<a href="#section-5-3" class="pilcrow">¶</a></p>
 <div id="application-association-to-forwarding-sub-layer">
 <section id="section-5.1">
         <h3 id="name-application-association-to-">
-<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-application-association-to-" class="section-name selfRef">Application association to Forwarding sub-layer</a>
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-application-association-to-" class="section-name selfRef">Application association to Forwarding sub layer</a>
         </h3>
 <p id="section-5.1-1">Applications should convey specific resource requirements to the DetNets they
 connect to. There are two potential options: (a) The DetNet Relay-node performs
@@ -1895,10 +1938,10 @@ the application defined data over DetNet as is and enable processing on transit 
         <h3 id="name-encapsulation">
 <a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-encapsulation" class="section-name selfRef">Encapsulation</a>
         </h3>
-<p id="section-5.2-1">OCN applications are expected to be IP-based end-stations. (MPLS DetNet will
+<p id="section-5.2-1">OCN applications are expected to be IP based end stations. (MPLS DetNet will
 not apply). It is also reasonable to assume that the data plane is IPv6 and
 Extension Headers are used for support in DetNet.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
-<p id="section-5.2-2">The end-system network requirement is expressed as 'OCN flow QoS'.
+<p id="section-5.2-2">The end system network requirement is expressed as 'OCN flow QoS'.
 Each packet carries its own unique OCN-QoS. The meta data to be transmitted to DetNet are:<a href="#section-5.2-2" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5.2-3">
 <pre>
@@ -2109,7 +2152,7 @@ Due to flow aggregation, it is upto the DetNet operator to design mapping betwee
 <dd class="break"></dd>
 <dt id="I-D.ietf-detnet-scaling-requirements">[I-D.ietf-detnet-scaling-requirements]</dt>
         <dd>
-<span class="refAuthor">Liu, P.</span>, <span class="refAuthor">Li, Y.</span>, <span class="refAuthor">Eckert, T. T.</span>, <span class="refAuthor">Xiong, Q.</span>, <span class="refAuthor">Ryoo, J.</span>, <span class="refAuthor">zhushiyin</span>, and <span class="refAuthor">X. Geng</span>, <span class="refTitle">"Requirements for Scaling Deterministic Networks"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-detnet-scaling-requirements-02</span>, <time datetime="2023-05-24" class="refDate">24 May 2023</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-detnet-scaling-requirements-02">https://datatracker.ietf.org/doc/html/draft-ietf-detnet-scaling-requirements-02</a>&gt;</span>. </dd>
+<span class="refAuthor">Liu, P.</span>, <span class="refAuthor">Li, Y.</span>, <span class="refAuthor">Eckert, T. T.</span>, <span class="refAuthor">Xiong, Q.</span>, <span class="refAuthor">Ryoo, J.</span>, <span class="refAuthor">zhushiyin</span>, and <span class="refAuthor">X. Geng</span>, <span class="refTitle">"Requirements for Scaling Deterministic Networks"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-detnet-scaling-requirements-03</span>, <time datetime="2023-07-07" class="refDate">7 July 2023</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-detnet-scaling-requirements-03">https://datatracker.ietf.org/doc/html/draft-ietf-detnet-scaling-requirements-03</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8939">[RFC8939]</dt>
         <dd>
