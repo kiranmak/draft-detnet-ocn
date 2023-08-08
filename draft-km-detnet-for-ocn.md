@@ -77,11 +77,11 @@ This document defines the interface between an OCN application and DetNet
 framework. i.e., using DetNet services for communication between the
 controllers and the field devices. This interface is used by an application to
 express its network-specific requirements. This document presents the
-perspective of an end system. Because IP network stack is widely used by
-general-purpose applications and provides more connection flexibility to end
-systems, the scope our discussion is specific to the IP-enabled
+perspective of an end system. Because general-purpose applications widely use IP 
+network stack and provide more connection flexibility to end
+systems, the scope of our discussion is specific to the IP-enabled
 DetNet data planes {{!DETNET-DP=RFC8655}}. For the other type of field devices,
-service level proxy is assumed (section  4.1 in RFC8655).
+a service level proxy is assumed (section  4.1 in RFC8655).
 
 Mapping OCNs to DetNet helps with developing a better understanding of how
 DetNets can be used in such scenarios. To this end, the document provides a
@@ -609,14 +609,14 @@ overloaded and DetNet-IP forwarding layer should be extended.
 
 Applications should convey specific resource requirements to the DetNets they
 connect to. There are two potential options: (a) The DetNet Relay-node performs
-translation and binding to one of the DetNet services in the DetNet; or (b) or carry
+translation and binding to one of the DetNet services in the DetNet; or (b) carry
 the application-defined data over DetNet as is and enables processing on transit nodes.
 
 ## Encapsulation
 
 OCN applications are expected to be IP based end stations. (MPLS DetNet will
-not apply). It is also reasonable to assume that the applications are IPv6 capable, therefore, Ipv6 extension headers can be used to 
-request network services inband. With an IPv4 base data plane, the encapsulations could potentially be over UDP, however, that is not the focus of this document. This document specifically deals with HBH IP6 extension headers mechanisms to interface with a Deterministic Network.
+not apply). It is also reasonable to assume that the applications are IPv6 capable; therefore, Ipv6 extension headers can be used to 
+request network services inband. With an IPv4 based data plane, the encapsulations could potentially be over UDP; however, that is not the focus of this document. This document specifically deals with HBH IP6 extension headers mechanisms to interface with a Deterministic Network.
 
 The end system network requirement is expressed as 'OCN flow QoS'.
 Each packet carries its own unique OCN-QoS. The metadata to be transmitted to DetNet are:
