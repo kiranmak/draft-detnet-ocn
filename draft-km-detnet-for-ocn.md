@@ -73,7 +73,7 @@ convenience. This document describes using DetNet to enable OCN applications
  since they provide mechanisms for guaranteed delay aware packet delivery,
 reliability, and for packet loss mitigation.
 
-This document defines the interface between an OCN application and DetNet
+This document defines the interface between an OCN application and the DetNet
 framework. i.e., using DetNet services for communication between the
 controllers and the field devices. This interface is used by an application to
 express its network-specific requirements. This document presents the
@@ -100,7 +100,7 @@ monitoring and/or control of devices, processes, and events. Examples include
 industrial control systems, building management systems, fire control systems,
 and physical access control mechanisms. Source: {{NIST-OT}}
 
-- Industral Automation:
+- Industrial Automation:
   : Mechanisms that enable machine-to-machine communication by use of
 technologies that enable automatic control and operation of industrial devices
 and processes leading to minimizing human intervention.
@@ -117,9 +117,9 @@ the system's output is used as input for future operations.
 
 - Industrial Control Networks:
  : Industrial control networks are the
-interconnection of equipment used for the operation, control or monitoring of
-machines in the industral environment. It involves a different level of
-communication - between fieldbus devices, digital controllers and software
+interconnection of equipment used for the operation, control, or monitoring of
+machines in the industrial environment. It involves a different level of
+communication - between fieldbus devices, digital controllers, and software
 applications
 
 - Human Machine Interface (HMI):
@@ -147,16 +147,16 @@ serial bus technologies (and now Ethernet).  Above those controllers are Human
 Machine Interface (HMI) connecting different PLCs and performing several
 controller functions along with exchanging data with the applications.
 
-A factory floor is divided into cell-sites. The PLCs or other types of
-controllers are physically located close to the equipment in the cell-sites.
-The collection of monitoring, status and sensing data is first done on the site
+A factory floor is divided into cell sites. The PLCs or other types of
+controllers are physically located close to the equipment in the cell sites.
+The collection of monitoring, status, and sensing data is first done on the site
 and then transmitted over secure channels to the data applications for
 aggregation and further processing. These applications can be hosted
-in remote cloud infrastructure, but are also often hosted within a
+in remote cloud infrastructure but are also often hosted within a
 limited domain environment, controlled by a single operator, like
 on-premise, at the edge or in a private cloud. Both options gain
-from infrastructure that scales out, has elastic compute and storage
-resources, so they will both be referred to as cloud in the following sections.
+from infrastructure that scales out, and has elastic compute and storage
+resources, so they will be referred to as cloud in the following sections.
 
 ~~~~~drawing
 
@@ -237,28 +237,28 @@ execution. The actuator participates in a closed control loop as needed.
 
 - A sensor emit periodic data from the sensors. It may intermittently provide
 asynchronous readings upon request from the controller. Sensors may report
-urgent messages regarding malfunctioning in certain equipment, cell-sites, or
+urgent messages regarding malfunctioning in certain equipment, cell sites, or
 zones.
 
-In many control systems there is at least one controller (or server) entity on
+In many control systems, there is at least one controller (or server) entity on
 one end and two other entities - the sensors and actuators on the other end.
 The communication with sensors and actuators is through the controller entity;
 as such data applications do not directly interact with the field devices.
 Neither actuators nor sensors perform decision-making tasks. This
-responsibility belongs to the controller.
+the responsibility belongs to the controller.
 
 ## Generalized Communication Model
 
-To describe networked process control behavior a conceptual communication model
+To describe networked process control behavior, a conceptual communication model
 is used so that the data applications do not concern with the details of the
-networks realizing operations and control. We refer to this model as operation
+networks realizing operations and control. We refer to this model as an operation
 and control network (OCN). The scope of the model is
 
 - Logical reference points: identify an endpoint's role or function as
   sensor-point, actuation-point, or operation & control point (oc-point for
-short). Note: term 'oc-point' is used to avoid confusion with network
-controllers and term 'fd-point' is used when both type of field devices are
-refered to.
+short). Note: the term 'oc-point' is used to avoid confusion with the network
+controllers and the term 'fd-point' is used when both types of field devices are
+referred to.
 
 - Interface specification: in terms of associated traffic patterns between the
   endpoints as described below in {{ocn-pattern}}. The interface may be any
@@ -266,15 +266,15 @@ type of network (Ethernet, IP, wireless, etc. The model assumes that the
 network is capable of providing network services and resources necessary of the
 application specific operations and control.
 
-Depending on the design of the usecase the process controller functionality
+Depending on the design of the use case, the process controller functionality
 (oc-point) may reside as a software module in the data application or as a
 separate module. When deployed as a separate module, another connectivity
-interface between the data application and oc-point will be needed and is out
+the interface between the data application and oc-point will be needed and is out
 of the scope of this document.
 
-The applications will use an communication interface between oc-point and
+The applications will use a communication interface between oc-point and
 sensor-point to receive sensory data and similarly interface between oc-point
-to actuation-point to execute a single or a sequence of control instructions.
+to actuation point to execute a single or a sequence of control instructions.
 
 This abstraction provides an additional layer of  protection in the sense that
 the traffic patterns between the reference points are well defined so any
@@ -282,16 +282,16 @@ exceptions can be easily caught.
 
 ## Traffic Patterns {#ocn-pattern}
 
-For either local or wide area, the process automation activities over the
+For either local or wide areas, the process automation activities over the
 network can generate a variety of traffic patterns between the oc-point and
 field devices such as:
 
 ### Control Loops {#c-loop}
 
 The equipment being operated upon is sensitive to when a command request
-actually executes. An actuator upon receiving a command (function code) will
+actually executes. An actuator, upon receiving a command (function code) will
 immediately perform the corresponding action. It is the responsibility of network
-and controller to ensure that behavior of the sensor and actuator follows the
+and controller to ensure that the behavior of the sensor and actuator follows the
 expectations of applications.
 
 For several such applications, the knowledge of a successful operation is equally
@@ -299,16 +299,16 @@ critical to advance to the next steps; therefore, getting the response back in
 a specified time is required, leading to a knowledge of timing. These types of
 bounded-time request and response mechanisms are called control loops.
 
-Unlike general purpose applications, commands cannot be batched, the
-parameters of the command that will follow depends on the result of the previous one.
-Each request in control loop takes up a minimal payload size (function code,
+Unlike general-purpose applications, commands cannot be batched; the
+parameters of the command that will follow depend on the result of the previous one.
+Each request in the control loop takes up a minimal payload size (function code,
 value, device or bus address) and will often fit in a single short packet.
 
 In Detnet-enabled network, it can be imagined as a small series of packets with
 the same flow identifier, but with different latency constraints.
 
 It is required to support control loops where each request presents its own
-latency constraints to the network and where commands are small sized packets.
+latency constraints to the network and where commands are small-sized packets.
 
 ###  Periodicity {#ocn-intervals}
 
