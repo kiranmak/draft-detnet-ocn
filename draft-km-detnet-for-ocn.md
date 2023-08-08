@@ -597,31 +597,31 @@ Remote process automation presents different types of traffic profiles and to
 deal with them within the DetNet framework, we discuss few possibilities.
 
 The DetNet UNI will enable applications to convey specific requirements to
-DetNet-aware Network. Note, that it is just an interface and blind to the
+DetNet-aware Network. Note that it is just an interface and is blind to the
 internal implementation of such networks.
 
-The DetNet architecture does not describe how DetNet-aware node can design DetNet sub-layers.
- But even from the view of an end system the separation between
+The DetNet architecture does not describe how DetNet-aware nodes can design DetNet sub-layers.
+ But even from the view of an end system, the separation between
 forwarding and service sublayer functions should be maintained. This means, the DSCP should not be
 overloaded and DetNet-IP forwarding layer should be extended.
 
-## Application association to Forwarding sub layer
+## Application association to Forwarding sublayer
 
 Applications should convey specific resource requirements to the DetNets they
 connect to. There are two potential options: (a) The DetNet Relay-node performs
 translation and binding to one of the DetNet services in the DetNet; or (b) or carry
-the application defined data over DetNet as is and enable processing on transit nodes.
+the application-defined data over DetNet as is and enables processing on transit nodes.
 
 ## Encapsulation
 
 OCN applications are expected to be IP based end stations. (MPLS DetNet will
-not apply). It is also reasonable to assume that the data plane is IPv6 and
-Extension Headers are used for support in DetNet.
+not apply). It is also reasonable to assume that the applications are IPv6 capable, therefore, Ipv6 extension headers can be used to 
+request network services inband. With an IPv4 base data plane, the encapsulations could potentially be over UDP, however, that is not the focus of this document. This document specifically deals with HBH IP6 extension headers mechanisms to interface with a Deterministic Network.
 
 The end system network requirement is expressed as 'OCN flow QoS'.
-Each packet carries its own unique OCN-QoS. The meta data to be transmitted to DetNet are:
+Each packet carries its own unique OCN-QoS. The metadata to be transmitted to DetNet are:
 
-      - Async traffic with latency-information.
+      - Async traffic with latency information.
       - Sync, periodic traffic
       - urgency of messages
       - Flowlet identification (for related packets).
@@ -659,12 +659,12 @@ This can be implemented using the HBH extension header option.
   :  8-bit unsigned integer. Multiple of 8-octets.
 
   OCN Function Flags:
-  : Some flags require metadata, others dont.  So process flags in order, if the
-flag is off,  following metadata will not be present.
+  : Some flags require metadata, while others don't.  So process flags in order, if the
+flag is off,  the following metadata will not be present.
 
      | Flag | Description                      |
      |------:+-------------------------------- |
-     |   U  | send message immediately. its an alarm  |
+     |   U  | send the message immediately. its an alarm  |
      |   P  | periodic packet (intervals in ~ms)      |
      |   F  | part of flowlet. see Nonce and seq  |
      |   L  | bounded latency spec provided    |
@@ -674,13 +674,13 @@ flag is off,  following metadata will not be present.
 {: #ocn-flags title="OCN Flags to indicate DetNet Functions"}
 
 Flowlet nonce:
-:    16-bit. identifies that a packet is associated to group of packets and shares fate.
-      as an example, an application can set same nonce for a set of an actuator and sensors.
-     when set to 0,flow id  flowid is set to same value in related flows. when flow id is also 0, no
+:    16-bit. identifies that a packet is associated to a group of packets and shares fate.
+      as an example, an application can set the same nonce for a set of an actuator and sensors.
+     when set to 0, flow id is set to the same value in related flows. when flow id is also 0, no
 relationship exists.
 
 Flowlet sequence:
-:    8-bit. sequence to be used for ordering with in flowlets.
+:    8-bit. sequence to be used for ordering within flowlets.
 
 Bound Latency Spec:
 :    32-bit. Encodings, to be defined.\\
@@ -714,13 +714,14 @@ Delay Variation Spec:
 
 ## OCNO Extension Header Signaling
 
-The current definition of OCNO only covers application to DetNet unidirectional interface. It is possibile to extend OCNO EH for conveying errors from DetNet to the controller as well - for example, when service violation happened in the DetNet, Relay node will set error flag in OCNO EH. Field devices are considered resource constrained and are not expected to insert or process extension headers.
+The current definition of OCNO only covers applications to DetNet unidirectional interface. It is possible to extend OCNO EH for conveying errors from DetNet to the controller as well - for example, when a service violation happened in the DetNet, the Relay node will set an error flag in OCNO EH. Field devices are considered resource constrained and are not expected to insert or process extension headers.
 Due to flow aggregation, it is upto the DetNet operator to design mapping between an application and the DetNet.
 
 Two different options of carrying hop-by-hop options are considered.
- 1. EH is inserted by application and Relay node performs mapping to DetNet flow.
- 2. if the DetNet dataplane is IPv6, then EH can be carried all the way to last Relay node, which
-    acts as gateway for the fld device and performs EH specific functions.
+
+ 1. EH is inserted by the application and the Relay node performs mapping to DetNet flow.
+ 2. if the DetNet data plane is IPv6, then EH can be carried all the way to the last Relay node, which
+    acts as a gateway for the fld device and performs EH-specific functions.
 
 # IANA Considerations
 
@@ -728,7 +729,7 @@ To request an option code.
 
 # Security Considerations
 
-See section on security above.
+See the section on security above.
 
 # Acknowledgements
 
