@@ -559,21 +559,20 @@ destination in a specific order.
 
 ### Security {#sec}
 
-Operations and control networks also have split security boundaries. They have been
-designed to be air-gapped or secure by separation. Current systems have strict
-admission control, ingress and egress policies.
-
-From network layer security perspective, how DetNet-enabled network deals with
-security falls in the {{!RFC9055}}, the end systems expect those mechanisms in
-place. In particular if additional information is distributed for datapath
-decisions, integrity protection as per Section  7.2 of {{!RFC9055}}.
-
-The border gateways and firewalls will be more prone to errors related to
-provisioning churns if the system is dynamic or continuously changing.
-
-The transport layer deals with the end-to-end encryption. It should evolve to
-incorporate additional IoT-friendly(lightweight) protocols such as COAP, MQTT
-and their encryption mechanisms.
+Industrial control networks also have split security boundaries. They have been
+designed to be air-gapped or secure by separation.  This is not ideal for
+remote operations and control. Current systems deploy strict admission control
+policies on both ingress and egress directions.
+ 
+With the growing volume of traffic in control networks, the border gateways and
+firewalls will need to incorporate a large number of flow rules; this can be more
+prone to errors related to provisioning churns, especially if the system is
+dynamic or continuously changing.
+ 
+Application flows can be protected at the network layer as described in the
+[RFC9055] Section 10. In case applications provide additional data (metadata)
+to the network layer, the integrity of metadata has to be protected from  the
+application endpoint to the DetNet edge
 
 ## Summary of Gaps
 
