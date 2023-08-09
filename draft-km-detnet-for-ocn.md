@@ -77,7 +77,7 @@ This document defines the interface between an OCN application and the DetNet
 framework. i.e., using DetNet services for communication between the
 controllers and the field devices. This interface is used by an application to
 express its network-specific requirements. This document presents the
-perspective of an end system. Because general-purpose applications widely use IP 
+perspective of an end system. Because general-purpose applications widely use IP
 network stack and provide more connection flexibility to end
 systems, the scope of our discussion is specific to the IP-enabled
 DetNet data planes {{!DETNET-DP=RFC8655}}. For the other type of field devices,
@@ -562,14 +562,14 @@ Industrial control networks also have split security boundaries. They have been
 designed to be air-gapped or secure by separation.  This is not ideal for
 remote operations and control. Current systems deploy strict admission control
 policies on both ingress and egress directions.
- 
+
 With the growing volume of traffic in control networks, the border gateways and
 firewalls will need to incorporate a large number of flow rules; this can be more
 prone to errors related to provisioning churns, especially if the system is
 dynamic or continuously changing.
- 
+
 Application flows can be protected at the network layer as described in the
-{{RFC9055}} Section 10. In case applications provide additional data (metadata)
+{{!RFC9055}} Section 10. In case applications provide additional data (metadata)
 to the network layer, the integrity of metadata has to be protected from  the
 application endpoint to the DetNet edge
 
