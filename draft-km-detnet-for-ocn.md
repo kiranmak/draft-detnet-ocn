@@ -577,10 +577,10 @@ application endpoint to the DetNet edge
 
  - Application view ({{app}}: An OCN application is unaware of how DetNet services are
    provisioned. A common UNI between the applications and DetNet-enabled
-network needs to be added to the current framework to better map the
+the network needs to be added to the current framework to better map the
 expectations better.
 
- - Security ({{sec}}): of process control related metadata to be used by network
+ - Security ({{sec}}):  metadata that is related to process control and operation which will be used by the network
    must be secured.
  - Traffic behavior ({{prov}} and {{class}}): Within the same DetNet flow, classified via
    6-tuple, additional information/metadata must be supported so that dynamic
@@ -613,8 +613,7 @@ the application-defined data over DetNet as is and enables processing on transit
 
 ## Encapsulation
 
-OCN applications are expected to be IP based end stations. (MPLS DetNet will
-not apply). It is also reasonable to assume that the applications are IPv6 capable; therefore, Ipv6 extension headers can be used to 
+OCN applications are expected to be IP based end stations. (MPLS DetNet will not apply). It is also reasonable to assume that the applications are IPv6 capable; therefore, Ipv6 extension headers can be used to
 request network services inband. With an IPv4 data plane, the encapsulations could potentially be over UDP; however, that is not the focus of this document. This document specifically deals with HBH IP6 extension headers mechanisms to interface with a Deterministic Network.
 
 The end system network requirement is expressed as 'OCN flow QoS'.
@@ -673,7 +672,7 @@ flag is off,  the following metadata will not be present.
 {: #ocn-flags title="OCN Flags to indicate DetNet Functions"}
 
 Flowlet nonce:
-:    16-bit. identifies that a packet is associated to a group of packets and shares fate.
+:    16-bit. identifies that a packet is associated with a group of packets and shares fate.
       as an example, an application can set the same nonce for a set of an actuator and sensors.
      when set to 0, flow id is set to the same value in related flows. when flow id is also 0, no
 relationship exists.
@@ -683,12 +682,12 @@ Flowlet sequence:
 
 Bound Latency Spec:
 :    32-bit. Encodings, to be defined.\\
-     16-bit (upper bound), 16-bit (lower-bound). This field will provide upper and lower
-     latency bounds describing the the latency bounds in milliseconds corresponding
+     16-bit (upper bound), 16-bit (lower bound). This field will provide upper and lower
+     latency bounds describing the latency bounds in milliseconds corresponding
      to the packet.
 
 Delay Variation Spec:
-:     16-bit. for synchronous stream, delay variation tolerance in ms.
+:     16-bit. for a synchronous stream, delay variation tolerance in ms.
 
 ## OCNO Operation
 
@@ -713,8 +712,8 @@ Delay Variation Spec:
 
 ## OCNO Extension Header Signaling
 
-The current definition of OCNO only covers applications to DetNet unidirectional interface. It is possible to extend OCNO EH for conveying errors from DetNet to the controller as well - for example, when a service violation happened in the DetNet, the Relay node will set an error flag in OCNO EH. Field devices are considered resource constrained and are not expected to insert or process extension headers.
-Due to flow aggregation, it is upto the DetNet operator to design mapping between an application and the DetNet.
+The current definition of OCNO only covers applications to DetNet unidirectional interface. It is possible to extend OCNO EH for conveying errors from DetNet to the controller as well - for example, when a service violation happened in the DetNet, the Relay node will set an error flag in OCNO EH. Field devices are considered resource-constrained and are not expected to insert or process extension headers.
+Due to flow aggregation, it is up to the DetNet operator to design mapping between an application and the DetNet.
 
 Two different options of carrying hop-by-hop options are considered.
 
