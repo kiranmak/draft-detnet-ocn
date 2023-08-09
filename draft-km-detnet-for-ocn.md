@@ -71,7 +71,7 @@ document, networks that support all the characteristics of remote process
 automation are referred to as Operation and Control Networks (OCNs) for
 convenience. This document describes using DetNet to enable OCN applications
  since they provide mechanisms for guaranteed delay aware packet delivery,
-reliability, and for packet loss mitigation.
+reliability, and packet loss mitigation.
 
 This document defines the interface between an OCN application and the DetNet
 framework. i.e., using DetNet services for communication between the
@@ -457,13 +457,13 @@ These issues are described below in more detail.
 ### Operator vs Application view {#app}
 
 The DetNet data plane is designed with a network-operator-centric approach. The
-operator's view on dealing with large-scale networks is discussed as newer
-requirement in {{!I-D.ietf-detnet-scaling-requirements}}. In order to use
+operator's view on dealing with large-scale networks is discussed in
+{{!I-D.ietf-detnet-scaling-requirements}}. In order to use
 resources efficiently, flow aggregation is done. The operators in industrial
 control networks are not necessarily network experts; they simply need an
-application side tool to dispatch their request to the Deterministic networks'
+application-side tool to dispatch their requests to the Deterministic networks'
 entry point. Especially, an OCN application may need many
-controller-field-device (ctrl-flddev) pairs to the be mapped to different
+controller-field-device (ctrl-flddev) pairs to be mapped to different
 aggregates.
 
 As the number of ctrl-flddev pairs grow, their variable traffic profiles can
@@ -525,7 +525,7 @@ sensor data by the applications. This also allows  controllers to be run and
 operated from the cloud platforms where much more powerful compute capabilities
 and available.
 
-### Provisioning for variety of Traffic flows {#prov}
+### Provisioning for a variety of Traffic flows {#prov}
 
 Different operational scenarios have different constraints; even commands
 within the same application will have different time requirements.
@@ -534,14 +534,13 @@ within the same application will have different time requirements.
     an actuator pair based on the type of end-equipment and precision
     requirements. Out-of-order message processing may lead to failures and shutdown
     of operations.  Messages may also be correlated. Therefore, time constraints
-    may be applied on a single message or on a group of messages.
+    may be applied to a single message or on a group of messages.
 
 
   - Similarly, each sensor-controller pair may come with its own interval
-    requirement. Sensors emit data at regular interval but this type of
+    requirement. Sensors emit data at regular intervals but this type of
     information may not always be time-constrained. The gaps between the period
-    can provide an indication to the controller about communication or other
-                                                                       problems.
+    can provide an indication to the controller about communication or other problems.
 
 - Additionally, some faults and alarm messages are urgent reports and must be marked and
   transmitted accordingly.
@@ -570,7 +569,7 @@ prone to errors related to provisioning churns, especially if the system is
 dynamic or continuously changing.
  
 Application flows can be protected at the network layer as described in the
-[RFC9055] Section 10. In case applications provide additional data (metadata)
+{{RFC9055}} Section 10. In case applications provide additional data (metadata)
 to the network layer, the integrity of metadata has to be protected from  the
 application endpoint to the DetNet edge
 
@@ -594,7 +593,7 @@ expectations better.
 # DetNet Potential Approach {#approaches}
 
 Remote process automation presents different types of traffic profiles and to
-deal with them within the DetNet framework, we discuss few possibilities.
+deal with them within the DetNet framework, we discuss a few possibilities.
 
 The DetNet UNI will enable applications to convey specific requirements to
 DetNet-aware Network. Note that it is just an interface and is blind to the
@@ -616,7 +615,7 @@ the application-defined data over DetNet as is and enables processing on transit
 
 OCN applications are expected to be IP based end stations. (MPLS DetNet will
 not apply). It is also reasonable to assume that the applications are IPv6 capable; therefore, Ipv6 extension headers can be used to 
-request network services inband. With an IPv4 based data plane, the encapsulations could potentially be over UDP; however, that is not the focus of this document. This document specifically deals with HBH IP6 extension headers mechanisms to interface with a Deterministic Network.
+request network services inband. With an IPv4 data plane, the encapsulations could potentially be over UDP; however, that is not the focus of this document. This document specifically deals with HBH IP6 extension headers mechanisms to interface with a Deterministic Network.
 
 The end system network requirement is expressed as 'OCN flow QoS'.
 Each packet carries its own unique OCN-QoS. The metadata to be transmitted to DetNet are:
