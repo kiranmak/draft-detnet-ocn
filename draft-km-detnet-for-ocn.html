@@ -1,0 +1,2241 @@
+<!DOCTYPE html>
+<html lang="en" class="Internet-Draft">
+<head>
+<meta charset="utf-8">
+<meta content="Common,Latin" name="scripts">
+<meta content="initial-scale=1.0" name="viewport">
+<title>Using Deterministic Networks for Industry Operations and Control</title>
+<meta content="Kiran Makhijani" name="author">
+<meta content="Tooba Faisal" name="author">
+<meta content="Richard Li" name="author">
+<meta content="Cedric Westphal" name="author">
+<meta content="
+       Remote industrial processes enable control &amp; operations from the
+software-defined application logic. In order to support process automation
+remotely, not only Deterministic Networks (DetNet) are needed but an interface
+between the application endpoints to the devices over a DetNet infrastructure
+is also required. This document describes an interface to deterministic
+networks from the view of endpoints to support process control and operations. 
+    " name="description">
+<meta content="xml2rfc 3.17.5" name="generator">
+<meta content="Internet-Draft" name="keyword">
+<meta content="draft-km-detnet-for-ocn-latest" name="ietf.draft">
+<!-- Generator version information:
+  xml2rfc 3.17.5
+    Python 3.11.4
+    ConfigArgParse 1.5.3
+    google-i18n-address 3.1.0
+    intervaltree 3.1.0
+    Jinja2 3.1.2
+    lxml 4.9.3
+    platformdirs 3.10.0
+    pycountry 22.3.5
+    PyYAML 6.0
+    requests 2.31.0
+    setuptools 67.7.2
+    six 1.16.0
+    wcwidth 0.2.6
+-->
+<link href="draft-km-detnet-for-ocn.xml" rel="alternate" type="application/rfc+xml">
+<link href="#copyright" rel="license">
+<style type="text/css">@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Lora SemiBold'), local('Lora-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-semibold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Cabin Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Cabin Condensed SemiBold'), local('CabinCondensed-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/cabincondensed-semibold-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Cabin Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Cabin Condensed SemiBold'), local('CabinCondensed-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/cabincondensed-semibold-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Cabin Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Cabin Condensed SemiBold'), local('CabinCondensed-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/cabincondensed-semibold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  color-scheme: light dark;
+  --background-color: #fff;
+  --text-color: #222;
+  --title-color: #191919;
+  --link-color: #2a6496;
+  --highlight-color: #f9f9f9;
+  --line-color: #eee;
+  --pilcrow-weak: #ddd;
+  --pilcrow-strong: #bbb;
+  --small-font-size: 14.5px;
+  --font-mono: 'Oxygen Mono', monospace;
+  scrollbar-color: #bbb #eee;
+}
+body {
+  max-width: 600px;
+  margin: 75px auto;
+  padding: 0 5px;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  font: 16px/22px "Lora", serif;
+  scroll-behavior: smooth;
+}
+
+.ears {
+  display: none;
+}
+
+/* headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Cabin Condensed", sans-serif;
+  font-weight: 600;
+  margin: 0.8em 0 0.3em;
+  font-size-adjust: 0.5;
+  color: var(--title-color);
+}
+h1#title {
+  font-size: 32px;
+  line-height: 40px;
+  clear: both;
+}
+h1#title, h1#rfcnum {
+  margin: 1.5em 0 0.2em;
+}
+h1#rfcnum + h1#title {
+  margin: 0.2em 0;
+}
+
+h1, h2, h3 {
+  font-size: 22px;
+  line-height: 27px;
+}
+h4, h5, h6 {
+  font-size: 20px;
+  line-height: 24px;
+}
+
+/* general structure */
+.author {
+  padding-bottom: 0.3em;
+}
+#abstract+p {
+  font-size: 18px;
+  line-height: 24px;
+}
+#abstract+p code, #abstract+p samp, #abstract+p tt {
+  font-size: 16px;
+  line-height: 0;
+}
+
+p {
+  padding: 0;
+  margin: 0.5em 0;
+  text-align: left;
+}
+div {
+  margin: 0;
+}
+.alignRight.art-text {
+  background-color: var(--highlight-color);
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  padding: 0.5em 1em 0;
+  margin-bottom: 0.5em;
+}
+.alignRight.art-text pre {
+  padding: 0;
+  width: auto;
+}
+.alignRight {
+  margin: 1em 0;
+}
+.alignRight > *:first-child {
+  border: none;
+  margin: 0;
+  float: right;
+  clear: both;
+}
+.alignRight > *:nth-child(2) {
+  clear: both;
+  display: block;
+  border: none;
+}
+svg {
+  display: block;
+}
+/* font-family isn't space-separated, but =~ will have to do */
+svg[font-family~="monospace" i], svg [font-family~="monospace" i] {
+  font-family: var(--font-mono);
+}
+.alignCenter.art-text {
+  background-color: var(--highlight-color);
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  padding: 0.5em 1em 0;
+  margin-bottom: 0.5em;
+}
+.alignCenter.art-text pre {
+  padding: 0;
+  width: auto;
+}
+.alignCenter {
+  margin: 1em 0;
+}
+.alignCenter > *:first-child {
+  border: none;
+  /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
+     support flexbox yet.
+  */
+  display: table;
+  margin: 0 auto;
+}
+
+/* lists */
+ol, ul {
+  padding: 0;
+  margin: 0 0 0.5em 2em;
+}
+:is(ol, ul) :is(ol, ul) {
+  margin-left: 1em;
+}
+li {
+  margin: 0 0 0.25em 0;
+}
+.ulCompact li {
+  margin: 0;
+}
+ul.empty, .ulEmpty {
+  list-style-type: none;
+}
+ul.empty li, .ulEmpty li {
+  margin-top: 0.5em;
+}
+:is(ul, ol).compact, .ulCompact, .olCompact {
+  line-height: 1;
+  margin: 0 0 0 2em;
+}
+
+/* definition lists */
+dl {
+  clear: left;
+  --indent: 3ch;
+  /* --indent: attr(indent ch); not supported in any browser, but we can dream */
+}
+dl.olPercent {
+  --indent: 5ch;
+}
+dl > dt {
+  float: left;
+  margin-right: 2ch;
+  min-width: 8ch;
+}
+dl.dlNewline > dt {
+  float: none;
+}
+dl > dd {
+  margin-bottom: .8em;
+  margin-left: var(--indent) !important; /* stupid element overrides */
+  min-height: 2ex;
+}
+dl.olPercent > dt {
+  min-width: calc(var(--indent) - 2ch);
+}
+:is(dl.compact, .dlCompact) > dd {
+  margin-bottom: 0;
+}
+:is(dl.compact, .dlCompact) > dd > :is(:first-child, .break:first-child + *) {
+  margin-top: 0;
+}
+:is(dl.compact, .dlCompact) > dd > :is(:last-child) {
+  margin-bottom: 0;
+}
+dl > dd > dl {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+}
+:is(dd, span).break {
+  display: none;
+}
+
+/* links */
+a, a[href].selfRef:hover {
+  text-decoration: none;
+}
+a[href] {
+  color: var(--link-color);
+}
+a[href].selfRef, .iref + a[href].internal {
+  color: var(--text-color);
+}
+a[href]:hover {
+  text-decoration: underline;
+}
+a[href].selfRef:hover {
+  background-color: var(--highlight-color);
+}
+a.xref:is(.cite, .auto), :is(#status-of-memo, #copyright) a {
+  white-space: nowrap;
+}
+
+/* Figures */
+tt, code, pre {
+  background-color: var(--highlight-color);
+  font: 14px/22px var(--font-mono);
+}
+tt, code {
+  /* changing the font for inline elements leads to different ascender
+     and descender heights; as we want to retain baseline alignment,
+     remove leading to avoid altering the final height of lines
+     note: this fails if these blocks take an entire line,
+     a different solution would be great */
+  line-height: 0;
+}
+:is(h1, h2, h3, h4, h5, h6) :is(tt, code) {
+  font-size: 84%;
+}
+pre {
+  border: 1px solid var(--line-color);
+  font-size: 13.5px;
+  line-height: 16px;
+  letter-spacing: -0.2px;
+  margin: 5px;
+  padding: 5px;
+}
+img {
+  max-width: 100%;
+}
+figure {
+  margin: 0.5em 0;
+  padding: 0;
+}
+figure blockquote {
+  margin: 0.8em 0.4em 0.4em;
+}
+figcaption, caption {
+  font-style: italic;
+  margin: 0.5em 1.5em;
+  text-align: left;
+}
+@media screen {
+  /* Auto-collapse boilerplate. */
+  :is(#status-of-memo, #copyright) p {
+    margin: -2px 0;
+    max-height: 0;
+    transition: max-height 2s ease, margin 0.5s ease 0.5s;
+    overflow: hidden;
+  }
+  :is(#status-of-memo, #copyright):hover p,
+  :is(#status-of-memo, #copyright) h2:target ~ p {
+    margin: 0.5em 0;
+    max-height: 500px;
+    overflow: auto;
+  }
+  pre, svg {
+    display: inline-block;
+    overflow-x: auto;
+  }
+  pre {
+    max-width: 100%;
+    width: calc(100% - 22px - 1em);
+  }
+  svg {
+    max-width: calc(100% - 22px - 1em);
+  }
+  figure pre {
+    display: block;
+    width: calc(100% - 25px);
+  }
+  :is(pre, svg) + .pilcrow {
+    display: inline-block;
+    vertical-align: text-bottom;
+    padding-bottom: 8px;
+  }
+}
+
+/* aside, blockquote */
+aside, blockquote {
+  margin-left: 0;
+  padding: 0 2em;
+  font-style: italic;
+}
+blockquote {
+  margin: 1em 0;
+}
+cite {
+  display: block;
+  text-align: right;
+  font-style: italic;
+}
+
+/* tables */
+table {
+  max-width: 100%;
+  margin: 0 0 1em;
+  border-collapse: collapse;
+}
+table.right {
+  margin-left: auto;
+}
+table.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+table.left {
+  margin-right: auto;
+}
+thead, tbody {
+  border: 1px solid var(--line-color);
+}
+th, td {
+  text-align: left;
+  vertical-align: top;
+  padding: 5px 10px;
+}
+th {
+  background-color: var(--line-color);
+}
+:is(tr:nth-child(2n), thead+tbody > tr:nth-child(2n+1)) > td {
+  background-color: var(--background-color);
+}
+:is(tr:nth-child(2n+1), thead+tbody > tr:nth-child(2n)) > td {
+  background-color: var(--highlight-color);
+}
+table caption {
+  margin: 0;
+  padding: 3px 0 3px 1em;
+}
+table p {
+  margin: 0;
+}
+
+/* pilcrow */
+a.pilcrow {
+  margin-left: 3px;
+  opacity: 0.2;
+  user-select: none;
+}
+a.pilcrow[href] { color: var(--pilcrow-weak); }
+a.pilcrow[href]:hover { text-decoration: none; }
+@media not print {
+  :hover > a.pilcrow {
+    opacity: 1;
+  }
+  a.pilcrow[href]:hover {
+    color: var(--pilcrow-strong);
+    background-color: transparent;
+  }
+}
+@media print {
+  a.pilcrow {
+    display: none;
+  }
+}
+
+/* misc */
+hr {
+  border: 0;
+  border-top: 1px solid var(--line-color);
+}
+.bcp14 {
+  font-variant: small-caps;
+  font-weight: 600;
+  font-size: var(--small-font-size);
+}
+.role {
+  font-variant: all-small-caps;
+}
+sub, sup {
+  line-height: 1;
+  font-size: 80%;
+}
+
+/* info block */
+#identifiers {
+  margin: 0;
+  font-size: var(--small-font-size);
+  line-height: 18px;
+  --identifier-width: 15ch;
+}
+#identifiers dt {
+  width: var(--identifier-width);
+  min-width: var(--identifier-width);
+  clear: left;
+  float: left;
+  text-align: right;
+  margin-right: 1ch;
+}
+#identifiers dd {
+  margin: 0;
+  margin-left: calc(1em + var(--identifier-width)) !important;
+  min-width: 5em;
+}
+#identifiers .authors .author {
+  display: inline-block;
+  margin-right: 1.5em;
+}
+#identifiers .authors .org {
+  font-style: italic;
+}
+
+/* The prepared/rendered info at the very bottom of the page */
+.docInfo {
+  color: #999;
+  font-size: 0.9em;
+  font-style: italic;
+  margin-top: 2em;
+}
+.docInfo .prepared {
+  float: left;
+}
+.docInfo .prepared {
+  float: right;
+}
+
+/* table of contents */
+#toc {
+  padding: 0.75em 0 2em 0;
+  margin-bottom: 1em;
+}
+#toc nav ul {
+  margin: 0 0.5em 0 0;
+  padding: 0;
+  list-style: none;
+}
+#toc nav li {
+  line-height: 1.3em;
+  margin: 0.75em 0;
+  padding-left: 1.2em;
+  text-indent: -1.2em;
+}
+#toc a.xref {
+  white-space: normal;
+}
+/* references */
+.references dt {
+  text-align: right;
+  font-weight: bold;
+  min-width: 10ch;
+  margin-right: 1.5ch;
+}
+.references dt:target::before {
+  content: "⇒";
+  width: 15px;
+  margin: 0 10px 0 -25px;
+}
+.references dd {
+  margin-left: 12ch !important;
+  overflow: auto;
+}
+
+.refInstance {
+  margin-bottom: 1.25em;
+}
+
+.references .ascii {
+  margin-bottom: 0.25em;
+}
+
+/* index */
+#rfc\.index\.index + ul {
+  margin-left: 0;
+}
+
+/* authors */
+address.vcard {
+  font-style: normal;
+  margin: 1em 0;
+}
+address.vcard .nameRole {
+  font-weight: 700;
+  margin-left: 0;
+}
+address.vcard .label {
+  margin: 0.5em 0;
+}
+address.vcard .type {
+  display: none;
+}
+.alternative-contact {
+  margin: 1.5em 0 1em;
+}
+hr.addr {
+  border-top: 1px dashed;
+  margin: 0;
+  color: #ddd;
+  max-width: calc(100% - 16px);
+}
+@media (min-width: 500px) {
+  #authors-addresses > section {
+    column-count: 2;
+    column-gap: 20px;
+  }
+  #authors-addresses > section > h2 {
+    column-span: all;
+  }
+  /* hack for break-inside: avoid-column */
+  #authors-addresses address {
+    display: inline-block;
+    break-inside: avoid-column;
+  }
+}
+
+.rfcEditorRemove p:first-of-type {
+  font-style: italic;
+}
+.cref {
+  background-color: rgba(249, 232, 105, 0.3);
+  padding: 2px 4px;
+}
+.crefSource {
+  font-style: italic;
+}
+/* alternative layout for smaller screens */
+@media screen and (max-width: 929px) {
+  #toc {
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    padding: 0;
+    margin: 0;
+    border-bottom: 1px solid #ccc;
+    opacity: 0.6;
+  }
+  #toc.active {
+      opacity: 1;
+  }
+  #toc h2 {
+    margin: 0;
+    padding: 2px 0 2px 6px;
+    padding-right: 1em;
+    font-size: 18px;
+    line-height: 24px;
+    min-width: 190px;
+    text-align: right;
+    background-color: #444;
+    color: white;
+    cursor: pointer;
+  }
+  #toc h2::before { /* css hamburger */
+    float: right;
+    position: relative;
+    width: 1em;
+    height: 1px;
+    left: -164px;
+    margin: 8px 0 0 0;
+    background: white none repeat scroll 0 0;
+    box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+    content: "";
+  }
+  #toc nav {
+    display: none;
+    background-color: var(--background-color);
+    padding: 0.5em 1em 1em;
+    overflow: auto;
+    overscroll-behavior: contain;
+    height: calc(100vh - 48px);
+    border-left: 1px solid #ddd;
+  }
+  #toc.active nav {
+    display: block;
+  }
+  /* Make the collapsed ToC header render white on gray also when it's a link */
+  #toc h2 a,
+  #toc h2 a:link,
+  #toc h2 a:focus,
+  #toc h2 a:hover,
+  #toc a.toplink,
+  #toc a.toplink:hover {
+    color: white;
+    background-color: #444;
+    text-decoration: none;
+  }
+  #toc a.toplink {
+    margin-top: 2px;
+  }
+}
+
+/* alternative layout for wide screens */
+@media screen and (min-width: 930px) {
+  body {
+    padding-right: 360px;
+    padding-right: calc(min(180px + 20%, 500px));
+  }
+  #toc {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    right: calc(50vw - 480px);
+    width: 312px;
+    margin: 0;
+    padding: 0;
+    z-index: 1;
+  }
+  #toc h2 {
+    margin: 0;
+    padding: 0.25em 1em 1em 0;
+  }
+  #toc nav {
+    display: block;
+    height: calc(90vh - 84px);
+    bottom: 0;
+    padding: 0.5em 0 2em;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+  #toc nav > ul  {
+    margin-bottom: 2em;
+  }
+  #toc ul {
+    margin: 0 0 0 4px;
+    font-size: var(--small-font-size);
+  }
+  #toc ul :is(p, li) {
+    margin: 2px 0;
+    line-height: 22px;
+  }
+  img { /* future proofing */
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* pagination */
+@media print {
+  body {
+    width: 100%;
+  }
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+  #n-copyright-notice {
+    border-bottom: none;
+  }
+  #toc, #n-introduction {
+    page-break-before: always;
+  }
+  #toc {
+    border-top: none;
+    padding-top: 0;
+  }
+  figure, pre {
+    page-break-inside: avoid;
+  }
+  figure {
+    overflow: scroll;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  h2+*, h3+*, h4+*, h5+*, h6+* {
+    page-break-before: avoid;
+  }
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 10pt;
+  }
+  table {
+    border: 1px solid #ddd;
+  }
+  td {
+    border-top: 1px solid #ddd;
+  }
+}
+
+@page :first {
+  padding-top: 0;
+  @top-left {
+    content: normal;
+    border: none;
+  }
+  @top-center {
+    content: normal;
+    border: none;
+  }
+  @top-right {
+    content: normal;
+    border: none;
+  }
+}
+
+@page {
+  size: A4;
+  margin-bottom: 45mm;
+  padding-top: 20px;
+}
+
+/* Changes introduced to fix issues found during implementation */
+
+/* Separate body from document info even without intervening H1 */
+section {
+  clear: both;
+}
+
+/* Top align author divs, to avoid names without organization dropping level with org names */
+.author {
+  vertical-align: top;
+}
+
+/* Style section numbers with more space between number and title */
+.section-number {
+  padding-right: 0.5em;
+}
+
+/* Add styling for a link in the ToC that points to the top of the document */
+a.toplink {
+  float: right;
+  margin: 8px 0.5em 0;
+}
+
+/* Provide styling for table cell text alignment */
+table .text-left {
+  text-align: left;
+}
+table .text-center {
+  text-align: center;
+}
+table .text-right {
+  text-align: right;
+}
+
+/* Make the alternative author contact information look less like just another
+   author, and group it closer with the primary author contact information */
+.alternative-contact {
+  margin: 0.5em 0 0.25em 0;
+}
+address .non-ascii {
+  margin: 0 0 0 2em;
+}
+
+/* With it being possible to set tables with alignment
+  left, center, and right, { width: 100%; } does not make sense */
+table {
+  width: auto;
+}
+
+/* Avoid reference text that sits in a block with very wide left margin,
+   because of a long floating dt label.*/
+.references dd {
+  overflow: visible;
+}
+
+/* Control caption placement */
+caption {
+  caption-side: bottom;
+}
+
+/* Limit the width of the author address vcard, so names in right-to-left
+   script don't end up on the other side of the page. */
+
+address.vcard {
+  max-width: 20em;
+  margin-right: auto;
+}
+
+/* For address alignment dependent on LTR or RTL scripts */
+address div.left {
+  text-align: left;
+}
+address div.right {
+  text-align: right;
+}
+
+/* Give the table caption label the same styling as the figcaption */
+
+@media print {
+  .toplink {
+    display: none;
+  }
+
+  /* avoid overwriting the top border line with the ToC header */
+  #toc {
+    padding-top: 1px;
+  }
+
+  /* Avoid page breaks inside dl and author address entries */
+  dd {
+    page-break-before: avoid;
+  }
+  .vcard {
+    page-break-inside: avoid;
+  }
+
+}
+
+/* Dark mode. */
+@media (prefers-color-scheme: dark) {
+:root {
+  --background-color: #121212;
+  --text-color: #f0f0f0;
+  --title-color: #fff;
+  --link-color: #4da4f0;
+  --highlight-color: #282828;
+  --line-color: #444;
+  --pilcrow-weak: #444;
+  --pilcrow-strong: #666;
+  scrollbar-color: #777 #333;
+}
+}
+
+/* SVG Trick: a prefix match works because only black and white are allowed */
+svg :is([stroke="black"], [stroke^="#000"]) {
+  stroke: var(--text-color);
+}
+svg :is([stroke="white"], [stroke^="#fff"]) {
+  stroke: var(--background-color);
+}
+svg :is([fill="black"], [fill^="#000"], :not([fill])) {
+  fill: var(--text-color);
+}
+svg :is([fill="white"], [fill^="#fff"]) {
+  fill: var(--background-color);
+}
+</style>
+
+</head>
+<body class="xml2rfc">
+<table class="ears">
+<thead><tr>
+<td class="left">Internet-Draft</td>
+<td class="center">ocn-in-detnets</td>
+<td class="right">August 2023</td>
+</tr></thead>
+<tfoot><tr>
+<td class="left">Makhijani, et al.</td>
+<td class="center">Expires 10 February 2024</td>
+<td class="right">[Page]</td>
+</tr></tfoot>
+</table>
+<div id="external-metadata" class="document-information"></div>
+<div id="internal-metadata" class="document-information">
+<dl id="identifiers">
+<dt class="label-workgroup">Workgroup:</dt>
+<dd class="workgroup">Detnet Group</dd>
+<dt class="label-internet-draft">Internet-Draft:</dt>
+<dd class="internet-draft">draft-km-detnet-for-ocn-latest</dd>
+<dt class="label-published">Published:</dt>
+<dd class="published">
+<time datetime="2023-08-09" class="published">9 August 2023</time>
+    </dd>
+<dt class="label-intended-status">Intended Status:</dt>
+<dd class="intended-status">Informational</dd>
+<dt class="label-expires">Expires:</dt>
+<dd class="expires"><time datetime="2024-02-10">10 February 2024</time></dd>
+<dt class="label-authors">Authors:</dt>
+<dd class="authors">
+<div class="author">
+      <div class="author-name">K. Makhijani</div>
+<div class="org">Futurewei</div>
+</div>
+<div class="author">
+      <div class="author-name">T. Faisal</div>
+<div class="org">King's College London</div>
+</div>
+<div class="author">
+      <div class="author-name">R. Li</div>
+<div class="org">Futurewei</div>
+</div>
+<div class="author">
+      <div class="author-name">C. Westphal</div>
+<div class="org">Futurewei</div>
+</div>
+</dd>
+</dl>
+</div>
+<h1 id="title">Using Deterministic Networks for Industry Operations and Control</h1>
+<section id="section-abstract">
+      <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
+<p id="section-abstract-1">Remote industrial processes enable control &amp; operations from the
+software-defined application logic. In order to support process automation
+remotely, not only Deterministic Networks (DetNet) are needed but an interface
+between the application endpoints to the devices over a DetNet infrastructure
+is also required. This document describes an interface to deterministic
+networks from the view of endpoints to support process control and operations.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+</section>
+<div id="status-of-memo">
+<section id="section-boilerplate.1">
+        <h2 id="name-status-of-this-memo">
+<a href="#name-status-of-this-memo" class="section-name selfRef">Status of This Memo</a>
+        </h2>
+<p id="section-boilerplate.1-1">
+        This Internet-Draft is submitted in full conformance with the
+        provisions of BCP 78 and BCP 79.<a href="#section-boilerplate.1-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-2">
+        Internet-Drafts are working documents of the Internet Engineering Task
+        Force (IETF). Note that other groups may also distribute working
+        documents as Internet-Drafts. The list of current Internet-Drafts is
+        at <span><a href="https://datatracker.ietf.org/drafts/current/">https://datatracker.ietf.org/drafts/current/</a></span>.<a href="#section-boilerplate.1-2" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-3">
+        Internet-Drafts are draft documents valid for a maximum of six months
+        and may be updated, replaced, or obsoleted by other documents at any
+        time. It is inappropriate to use Internet-Drafts as reference
+        material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-4">
+        This Internet-Draft will expire on 10 February 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="copyright">
+<section id="section-boilerplate.2">
+        <h2 id="name-copyright-notice">
+<a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
+        </h2>
+<p id="section-boilerplate.2-1">
+            Copyright (c) 2023 IETF Trust and the persons identified as the
+            document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.2-2">
+            This document is subject to BCP 78 and the IETF Trust's Legal
+            Provisions Relating to IETF Documents
+            (<span><a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a></span>) in effect on the date of
+            publication of this document. Please review these documents
+            carefully, as they describe your rights and restrictions with
+            respect to this document.<a href="#section-boilerplate.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="toc">
+<section id="section-toc.1">
+        <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
+<a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
+        </h2>
+<nav class="toc"><ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
+            <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
+            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-terminology" class="internal xref">Terminology</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.1">
+                <p id="section-toc.1-1.2.2.1.1" class="keepWithNext"><a href="#section-2.1" class="auto internal xref">2.1</a>.  <a href="#name-acronyms" class="internal xref">Acronyms</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-background-on-industrial-co" class="internal xref">Background on Industrial Control Systems</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
+                <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-connected-controllers-senso" class="internal xref">Connected Controllers, Sensors and Actuators</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-generalized-communication-m" class="internal xref">Generalized Communication Model</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3">
+                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-traffic-patterns" class="internal xref">Traffic Patterns</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3.2.1">
+                    <p id="section-toc.1-1.3.2.3.2.1.1"><a href="#section-3.3.1" class="auto internal xref">3.3.1</a>.  <a href="#name-control-loops" class="internal xref">Control Loops</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3.2.2">
+                    <p id="section-toc.1-1.3.2.3.2.2.1"><a href="#section-3.3.2" class="auto internal xref">3.3.2</a>.  <a href="#name-periodicity" class="internal xref">Periodicity</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3.2.3">
+                    <p id="section-toc.1-1.3.2.3.2.3.1"><a href="#section-3.3.3" class="auto internal xref">3.3.3</a>.  <a href="#name-ordering" class="internal xref">Ordering</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3.2.4">
+                    <p id="section-toc.1-1.3.2.3.2.4.1"><a href="#section-3.3.4" class="auto internal xref">3.3.4</a>.  <a href="#name-urgency" class="internal xref">Urgency</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.4">
+                <p id="section-toc.1-1.3.2.4.1"><a href="#section-3.4" class="auto internal xref">3.4</a>.  <a href="#name-communication-patterns" class="internal xref">Communication Patterns</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-gap-analysis" class="internal xref">Gap Analysis</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
+                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-deterministic-networks-rele" class="internal xref">Deterministic Networks Relevance</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2">
+                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-detnet-related-consideratio" class="internal xref">DetNet related Considerations and Dependencies</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.1">
+                    <p id="section-toc.1-1.4.2.2.2.1.1"><a href="#section-4.2.1" class="auto internal xref">4.2.1</a>.  <a href="#name-operator-vs-application-vie" class="internal xref">Operator vs Application view</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.2">
+                    <p id="section-toc.1-1.4.2.2.2.2.1"><a href="#section-4.2.2" class="auto internal xref">4.2.2</a>.  <a href="#name-flow-reservation-and-classi" class="internal xref">Flow reservation and classification</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.3">
+                    <p id="section-toc.1-1.4.2.2.2.3.1"><a href="#section-4.2.3" class="auto internal xref">4.2.3</a>.  <a href="#name-split-traffic-flows" class="internal xref">Split Traffic flows</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.4">
+                    <p id="section-toc.1-1.4.2.2.2.4.1"><a href="#section-4.2.4" class="auto internal xref">4.2.4</a>.  <a href="#name-provisioning-for-a-variety-" class="internal xref">Provisioning for a variety of Traffic flows</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.5">
+                    <p id="section-toc.1-1.4.2.2.2.5.1"><a href="#section-4.2.5" class="auto internal xref">4.2.5</a>.  <a href="#name-security" class="internal xref">Security</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.3">
+                <p id="section-toc.1-1.4.2.3.1"><a href="#section-4.3" class="auto internal xref">4.3</a>.  <a href="#name-summary-of-gaps" class="internal xref">Summary of Gaps</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-detnet-potential-approach" class="internal xref">DetNet Potential Approach</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-application-association-to-" class="internal xref">Application association to Forwarding sublayer</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-encapsulation" class="internal xref">Encapsulation</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3">
+                <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="auto internal xref">5.3</a>.  <a href="#name-operation-and-control-netwo" class="internal xref">Operation and Control Network Option (OCNO)</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.4">
+                <p id="section-toc.1-1.5.2.4.1"><a href="#section-5.4" class="auto internal xref">5.4</a>.  <a href="#name-ocno-operation" class="internal xref">OCNO Operation</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.5">
+                <p id="section-toc.1-1.5.2.5.1"><a href="#section-5.5" class="auto internal xref">5.5</a>.  <a href="#name-ocno-extension-header-signa" class="internal xref">OCNO Extension Header Signaling</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-acknowledgements" class="internal xref">Acknowledgements</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1">
+                <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="auto internal xref">9.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.2">
+                <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="auto internal xref">9.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
+            <p id="section-toc.1-1.10.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+</li>
+        </ul>
+</nav>
+</section>
+</div>
+<div id="intro">
+<section id="section-1">
+      <h2 id="name-introduction">
+<a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
+      </h2>
+<p id="section-1-1">Process automation systems involve operating a piece of equipment (such as
+actuating and/or sensing field devices). The communication between the
+controllers and field devices exhibits a well-defined set of behaviors and
+has specific characteristics: the delivery of a control-command to a
+machine must be executed within the time frame specified by a controller or
+by an application to provide reliable and secure operation.  A low or zero
+tolerance to latency and packet losses (among other things) is implied.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">The endpoints (controllers and field devices) embody machine-to-machine
+communications to facilitate both remote and local process automation. In this
+document, networks that support all the characteristics of remote process
+automation are referred to as Operation and Control Networks (OCNs) for
+convenience. This document describes using DetNet to enable OCN applications
+ since they provide mechanisms for guaranteed delay aware packet delivery,
+reliability, and packet loss mitigation.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">This document defines the interface between an OCN application and the DetNet
+framework. i.e., using DetNet services for communication between the
+controllers and the field devices. This interface is used by an application to
+express its network-specific requirements. This document presents the
+perspective of an end system. Because general-purpose applications widely use IP
+network stack and provide more connection flexibility to end
+systems, the scope of our discussion is specific to the IP-enabled
+DetNet data planes <span>[<a href="#DETNET-DP" class="cite xref">DETNET-DP</a>]</span>. For the other type of field devices,
+a service level proxy is assumed (section  4.1 in RFC8655).<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">Mapping OCNs to DetNet helps with developing a better understanding of how
+DetNets can be used in such scenarios. To this end, the document provides a
+background on <a href="#background" class="auto internal xref">Section 3</a> the type of traffic patterns in OCN applications.
+It proposes an interface between an application and DetNet, and a potential
+solution direction to support OCN traffic patterns over DetNet, as covered in
+<a href="#approaches" class="auto internal xref">Section 5</a>.<a href="#section-1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="terminology">
+<section id="section-2">
+      <h2 id="name-terminology">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-terminology" class="section-name selfRef">Terminology</a>
+      </h2>
+<ul class="normal">
+<li class="normal" id="section-2-1.1">
+          <span class="break"></span><dl class="dlParallel" id="section-2-1.1.1">
+            <dt id="section-2-1.1.1.1">Operational Technology (OT):</dt>
+            <dd style="margin-left: 1.5em" id="section-2-1.1.1.2">
+              <p id="section-2-1.1.1.2.1">Programmable systems or devices that interact
+with the physical environment (or manage devices that interact with the physical
+environment). These systems/devices detect or cause a direct change through the
+monitoring and/or control of devices, processes, and events. Examples include
+industrial control systems, building management systems, fire control systems,
+and physical access control mechanisms. Source: <span>[<a href="#NIST-OT" class="cite xref">NIST-OT</a>]</span><a href="#section-2-1.1.1.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+</li>
+        <li class="normal" id="section-2-1.2">
+          <span class="break"></span><dl class="dlParallel" id="section-2-1.2.1">
+            <dt id="section-2-1.2.1.1">Industrial Automation:</dt>
+            <dd style="margin-left: 1.5em" id="section-2-1.2.1.2">
+              <p id="section-2-1.2.1.2.1">Mechanisms that enable machine-to-machine communication by use of
+technologies that enable automatic control and operation of industrial devices
+and processes leading to minimizing human intervention.<a href="#section-2-1.2.1.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+</li>
+        <li class="normal" id="section-2-1.3">
+          <span class="break"></span><dl class="dlParallel" id="section-2-1.3.1">
+            <dt id="section-2-1.3.1.1">Control Loop:</dt>
+            <dd style="margin-left: 1.5em" id="section-2-1.3.1.2">
+              <p id="section-2-1.3.1.2.1">Control loops are part of process control systems in which
+desired process response is provided as input to the controller, which
+performs the corresponding action (using actuators) and reads the output values.
+Since no error correction is performed, these are called open control loops.<a href="#section-2-1.3.1.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+</li>
+        <li class="normal" id="section-2-1.4">
+          <span class="break"></span><dl class="dlParallel" id="section-2-1.4.1">
+            <dt id="section-2-1.4.1.1">Feedback Control Loop:</dt>
+            <dd style="margin-left: 1.5em" id="section-2-1.4.1.2">
+              <p id="section-2-1.4.1.2.1">A feedback loop is part of a system in which some portion (or all) of
+the system's output is used as input for future operations.<a href="#section-2-1.4.1.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+</li>
+        <li class="normal" id="section-2-1.5">
+          <span class="break"></span><dl class="dlParallel" id="section-2-1.5.1">
+            <dt id="section-2-1.5.1.1">Industrial Control Networks:</dt>
+            <dd style="margin-left: 1.5em" id="section-2-1.5.1.2">
+              <p id="section-2-1.5.1.2.1">Industrial control networks are the
+interconnection of equipment used for the operation, control, or monitoring of
+machines in the industrial environment. It involves a different level of
+communication - between fieldbus devices, digital controllers, and software
+applications<a href="#section-2-1.5.1.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+</li>
+        <li class="normal" id="section-2-1.6">
+          <span class="break"></span><dl class="dlParallel" id="section-2-1.6.1">
+            <dt id="section-2-1.6.1.1">Human Machine Interface (HMI):</dt>
+            <dd style="margin-left: 1.5em" id="section-2-1.6.1.2">
+              <p id="section-2-1.6.1.2.1">An interface between the operator and the machine.
+The communication interface relays I/O data back and forth between an operator's
+terminal and HMI software to control and monitor equipment.<a href="#section-2-1.6.1.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+</li>
+      </ul>
+<div id="acronyms">
+<section id="section-2.1">
+        <h3 id="name-acronyms">
+<a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-acronyms" class="section-name selfRef">Acronyms</a>
+        </h3>
+<ul class="normal">
+<li class="normal" id="section-2.1-1.1">HMI: Human Machine Interface<a href="#section-2.1-1.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-2.1-1.2">OCN: Operations and Control Networks<a href="#section-2.1-1.2" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-2.1-1.3">PLC: Programmable Logic Control<a href="#section-2.1-1.3" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-2.1-1.4">OT: Operational Technology<a href="#section-2.1-1.4" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-2.1-1.5">OC: Operation and Control<a href="#section-2.1-1.5" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-2.1-1.6">OCN: Operation and Control Networks<a href="#section-2.1-1.6" class="pilcrow">¶</a>
+</li>
+        </ul>
+</section>
+</div>
+</section>
+</div>
+<div id="background">
+<section id="section-3">
+      <h2 id="name-background-on-industrial-co">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-background-on-industrial-co" class="section-name selfRef">Background on Industrial Control Systems</a>
+      </h2>
+<p id="section-3-1">An industrial control network interconnects devices used to operate, control and
+monitor physical equipment in industrial environments. <a href="#icn-arch" class="auto internal xref">Figure 1</a> below shows
+such systems' reference model and functional components. Closest to the
+physical equipment are field devices (actuators and sensors) that connect to
+the Programmable Logic Controllers (PLCs) or other types of controllers using
+serial bus technologies (and now Ethernet).  Above those controllers are Human
+Machine Interface (HMI) connecting different PLCs and performing several
+controller functions along with exchanging data with the applications.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-2">A factory floor is divided into cell sites. The PLCs or other types of
+controllers are physically located close to the equipment in the cell sites.
+The collection of monitoring, status, and sensing data is first done on the site
+and then transmitted over secure channels to the data applications for
+aggregation and further processing. These applications can be hosted
+in remote cloud infrastructure but are also often hosted within a
+limited domain environment, controlled by a single operator, like
+on-premise, at the edge or in a private cloud. Both options gain
+from infrastructure that scales out, and has elastic compute and storage
+resources, so they will be referred to as cloud in the following sections.<a href="#section-3-2" class="pilcrow">¶</a></p>
+<span id="name-functions-in-industrial-con"></span><div id="icn-arch">
+<figure id="figure-1">
+        <div class="lang-drawing sourcecode" id="section-3-3.1">
+<pre>
+        +-+-+-+-+-+-+
+     ^  | Data Apps |....            External business-logic
+     :  +-+-+-+-+-+-+   :                Network
+     :        |         :
+     v  +-+-+-+-+-+-+  +-+-+-+-+--+
+        | vendor A  |  |vendor B  |  Interconnection of
+        | controller|  |controller|  controllers
+     ^  +-+-+-+-+-+-+  +-+-+-+-+-+   (system integrators)
+     :       |         |
+     :   +-+-+-+-+  +-+-++-+
+     :   | Net X |  | Net Y|
+     v   | PLCs  |  | PLCs |--+    device-controllers
+     ^   +-+-+-+-+  +-+-+--+  |
+     :      |        |        |
+     :   +-+-+    +-+-+    +-+-+
+     v   |   |    |   |    |   |   Field devices
+         +-+-+    +-+-+    +-+-+
+</pre>
+</div>
+<figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
+<a href="#name-functions-in-industrial-con" class="selfRef">Functions in Industrial Control Networks</a>
+        </figcaption></figure>
+</div>
+<p id="section-3-4">What is changing now is that data applications are integrating process control
+functions to improve automation and to make real-time decisions,
+programmatically. The equipment control and  collection of data generated by
+the sensors should be possible over small or large-scale deterministic networks
+as illustrated in <a href="#new-arch" class="auto internal xref">Figure 2</a>.<a href="#section-3-4" class="pilcrow">¶</a></p>
+<span id="name-converged-cloud-based-indus"></span><div id="new-arch">
+<figure id="figure-2">
+        <div class="lang-drawing sourcecode" id="section-3-5.1">
+<pre>
+               +-+-+-+-+-+-+-+-+
+               |     Data Apps |      Integrated Apps with
+               | c1 | c2  | c3 |      Remote process control
+               +-+-+-+-+-+-+-+-+
+                \   ,-----.   /
+                 +-[  Det- ]-+
+                   [Network]
+                    `-----'
+               +-+-+-|  |-+-+-+-+
+               |        |       |
+             +-+-+    +-+-+   +-+-+
+             |   |    |   |   |   |   Field devices
+             +-+-+    +-+-+   +-+-+
+</pre>
+</div>
+<figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
+<a href="#name-converged-cloud-based-indus" class="selfRef">Converged Cloud based Industrial Control Networks</a>
+        </figcaption></figure>
+</div>
+<p id="section-3-6">One particular motivation is to provide the behavior of a field bus between
+the cloud and the actuators/sensors with the same assurance of reliability and
+latency, albeit over wide area networks (WAN). This is evident from many
+industrial control applications, such as factory automation <span>[<a href="#FACTORY" class="cite xref">FACTORY</a>]</span>, PLC
+virtualization <span>[<a href="#VIRT-PLC" class="cite xref">VIRT-PLC</a>]</span>, power grid operations <span>[<a href="#PTP-GRID" class="cite xref">PTP-GRID</a>]</span>, etc. that are now
+expected to operate in the cloud by leveraging virtualization and shared
+infrastructure wherever possible.<a href="#section-3-6" class="pilcrow">¶</a></p>
+<div id="connected-controllers-sensors-and-actuators">
+<section id="section-3.1">
+        <h3 id="name-connected-controllers-senso">
+<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-connected-controllers-senso" class="section-name selfRef">Connected Controllers, Sensors and Actuators</a>
+        </h3>
+<p id="section-3.1-1">Control systems comprise Controllers, Sensors and Actuators. The data
+traffic essentially carries instructions that cause machines or equipment
+to move and do things within or at a specific time. The connectivity exists in
+the following manner:<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.1-2.1">A controller interfaces with the sensors and actuators. The controller knows an
+application's performance parameters which are expressed in terms of network
+specific requests or resources such as tolerance to packet loss, latency limits,
+jitter variance, bandwidth, and specification for safety.  The controller knows
+all the packet delivery constraints.<a href="#section-3.1-2.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-3.1-2.2">An actuator receives specific commands from the controllers. The DetNet should
+be able to enable control of actuating devices remotely from the controller
+while meeting all the requirements (or key performance indicators - KPIs)
+necessary for successful command
+execution. The actuator participates in a closed control loop as needed.<a href="#section-3.1-2.2" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-3.1-2.3">A sensor emit periodic data from the sensors. It may intermittently provide
+asynchronous readings upon request from the controller. Sensors may report
+urgent messages regarding malfunctioning in certain equipment, cell sites, or
+zones.<a href="#section-3.1-2.3" class="pilcrow">¶</a>
+</li>
+        </ul>
+<p id="section-3.1-3">In many control systems, there is at least one controller (or server) entity on
+one end and two other entities - the sensors and actuators on the other end.
+The communication with sensors and actuators is through the controller entity;
+as such data applications do not directly interact with the field devices.
+Neither actuators nor sensors perform decision-making tasks. This
+the responsibility belongs to the controller.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="generalized-communication-model">
+<section id="section-3.2">
+        <h3 id="name-generalized-communication-m">
+<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-generalized-communication-m" class="section-name selfRef">Generalized Communication Model</a>
+        </h3>
+<p id="section-3.2-1">To describe networked process control behavior, a conceptual communication model
+is used so that the data applications do not concern with the details of the
+networks realizing operations and control. We refer to this model as an operation
+and control network (OCN). The scope of the model is<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.2-2.1">Logical reference points: identify an endpoint's role or function as
+sensor-point, actuation-point, or operation &amp; control point (oc-point for
+short). Note: the term 'oc-point' is used to avoid confusion with the network
+controllers and the term 'fd-point' is used when both types of field devices are
+referred to.<a href="#section-3.2-2.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-3.2-2.2">Interface specification: in terms of associated traffic patterns between the
+endpoints as described below in <a href="#ocn-pattern" class="auto internal xref">Section 3.3</a>. The interface may be any
+type of network (Ethernet, IP, wireless, etc. The model assumes that the
+network is capable of providing network services and resources necessary of the
+application specific operations and control.<a href="#section-3.2-2.2" class="pilcrow">¶</a>
+</li>
+        </ul>
+<p id="section-3.2-3">Depending on the design of the use case, the process controller functionality
+(oc-point) may reside as a software module in the data application or as a
+separate module. When deployed as a separate module, another connectivity
+the interface between the data application and oc-point will be needed and is out
+of the scope of this document.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.2-4">The applications will use a communication interface between oc-point and
+sensor-point to receive sensory data and similarly interface between oc-point
+to actuation point to execute a single or a sequence of control instructions.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
+<p id="section-3.2-5">This abstraction provides an additional layer of  protection in the sense that
+the traffic patterns between the reference points are well defined so any
+exceptions can be easily caught.<a href="#section-3.2-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="ocn-pattern">
+<section id="section-3.3">
+        <h3 id="name-traffic-patterns">
+<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-traffic-patterns" class="section-name selfRef">Traffic Patterns</a>
+        </h3>
+<p id="section-3.3-1">For either local or wide areas, the process automation activities over the
+network can generate a variety of traffic patterns between the oc-point and
+field devices such as:<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+<div id="c-loop">
+<section id="section-3.3.1">
+          <h4 id="name-control-loops">
+<a href="#section-3.3.1" class="section-number selfRef">3.3.1. </a><a href="#name-control-loops" class="section-name selfRef">Control Loops</a>
+          </h4>
+<p id="section-3.3.1-1">The equipment being operated upon is sensitive to when a command request
+actually executes. An actuator, upon receiving a command (function code) will
+immediately perform the corresponding action. It is the responsibility of network
+and controller to ensure that the behavior of the sensor and actuator follows the
+expectations of applications.<a href="#section-3.3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-2">For several such applications, the knowledge of a successful operation is equally
+critical to advance to the next steps; therefore, getting the response back in
+a specified time is required, leading to a knowledge of timing. These types of
+bounded-time request and response mechanisms are called control loops.<a href="#section-3.3.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-3">Unlike general-purpose applications, commands cannot be batched; the
+parameters of the command that will follow depend on the result of the previous one.
+Each request in the control loop takes up a minimal payload size (function code,
+value, device or bus address) and will often fit in a single short packet.<a href="#section-3.3.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-4">In Detnet-enabled network, it can be imagined as a small series of packets with
+the same flow identifier, but with different latency constraints.<a href="#section-3.3.1-4" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-5">It is required to support control loops where each request presents its own
+latency constraints to the network and where commands are small-sized packets.<a href="#section-3.3.1-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="ocn-intervals">
+<section id="section-3.3.2">
+          <h4 id="name-periodicity">
+<a href="#section-3.3.2" class="section-number selfRef">3.3.2. </a><a href="#name-periodicity" class="section-name selfRef">Periodicity</a>
+          </h4>
+<p id="section-3.3.2-1">Sensors emit data at regular intervals, but this information may not always be
+time-constrained. Usually, controllers are programmed to tolerate and record
+intermittent losses.  Automation software can make a more informed decision by
+monitoring a lot of sensor data.  Thus, the traffic volume generated by sensors is
+expected to high.  The periodicity of each sensor can also vary based on the
+equipment.<a href="#section-3.3.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.3.2-2">It is required that network capacity is planned appropriately for the periodic
+traffic generated from the different sensors. The periodic interval should also
+be preserved in the network because any variations could provide false
+indications that the equipment is misbehaving.<a href="#section-3.3.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="ordering">
+<section id="section-3.3.3">
+          <h4 id="name-ordering">
+<a href="#section-3.3.3" class="section-number selfRef">3.3.3. </a><a href="#name-ordering" class="section-name selfRef">Ordering</a>
+          </h4>
+<p id="section-3.3.3-1">In real-time process control communications, out of order message processing
+will lead to costly failures of operations.  Messages such as request and
+reply, or a sequence of commands may be correlated therefore, both time
+constraints and order must be preserved. The traffic is generated when software
+triggers control-commands to field devices. This may not always map into
+asynchronous DetNet flows if observation interval is not known.<a href="#section-3.3.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.3.3-2">The network should be capable of supporting sporadic on-demand short-term flows.
+This does not imply instantaneous resource provisioning, instead it would be
+more efficient if the provisioned resources could be shared for such
+asynchronous traffic patterns.<a href="#section-3.3.3-2" class="pilcrow">¶</a></p>
+<p id="section-3.3.3-3">Another consideration with ordering is that both actuators and sensors are
+low-resource devices.  They can not buffer multiple packets and execute them in
+order while maintaining the latency bounds of each command execution.  This
+means the network must pace packets that may arrive early.<a href="#section-3.3.3-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="urgency">
+<section id="section-3.3.4">
+          <h4 id="name-urgency">
+<a href="#section-3.3.4" class="section-number selfRef">3.3.4. </a><a href="#name-urgency" class="section-name selfRef">Urgency</a>
+          </h4>
+<p id="section-3.3.4-1">Besides latency constrained and periodic messages, sensors also report failures
+as fault notifications, such as pressure valve failure, abnormally high
+humidity, etc. These messages must be delivered with utmost urgency and
+immediately.<a href="#section-3.3.4-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="communication-patterns">
+<section id="section-3.4">
+        <h3 id="name-communication-patterns">
+<a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-communication-patterns" class="section-name selfRef">Communication Patterns</a>
+        </h3>
+<p id="section-3.4-1">Control systems follow a specific communication discipline. The field devices
+(sensors and actuators) are always controlled, i.e., interact with the system
+through controllers in the following manner:-<a href="#section-3.4-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.4-2.1">Sensor to controller: data emitted at periodic interval providing
+status/health of the environment or equipment. The  traffic volume for this
+communication is determined by the payload size of each  sensor data and the
+interval. These are a kind of synchronous Detnet flows but with much higher time intervals; still the inter-packet gap should be minimum.<a href="#section-3.4-2.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-3.4-2.2">Controller to/from actuator: the commands/instructions to write or read.
+Actuators generally do not initiate a command unless requested by the
+controller. Actuators will often execute a command, read the corresponding
+result, and send that in response to the original write command.  The traffic
+profile will be balanced in both directions due to requests/ response behavior. These are like asynchronous flows but without the observation interval constraint.<a href="#section-3.4-2.2" class="pilcrow">¶</a>
+</li>
+        </ul>
+</section>
+</div>
+</section>
+</div>
+<div id="gaps">
+<section id="section-4">
+      <h2 id="name-gap-analysis">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-gap-analysis" class="section-name selfRef">Gap Analysis</a>
+      </h2>
+<p id="section-4-1">Today, most of the operations and control solutions are split approaches. This
+means that the controller is on-premises close to the equipment, sensor data is
+first collected on-site, and then bulk transmitted to the enterprise cloud for
+further processing.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-2">To support delivering remote instructions to the machines over wide area
+networks using Deterministic Network data plane architecture
+<span>[<a href="#DETNET-DP" class="cite xref">DETNET-DP</a>]</span> and corresponding data plane DetNet over IP
+<span>[<a href="#DETNET-IP" class="cite xref">DETNET-IP</a>]</span> mechanisms apply as discussed in <a href="#detnet-rel" class="auto internal xref">Section 4.1</a>. Later in
+<a href="#depend" class="auto internal xref">Section 4.2</a> additional asks from DetNet are covered.<a href="#section-4-2" class="pilcrow">¶</a></p>
+<div id="detnet-rel">
+<section id="section-4.1">
+        <h3 id="name-deterministic-networks-rele">
+<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-deterministic-networks-rele" class="section-name selfRef">Deterministic Networks Relevance</a>
+        </h3>
+<ul class="normal ulEmpty">
+<li class="normal ulEmpty" id="section-4.1-1.1">
+            <p id="section-4.1-1.1.1">Note: This section's text and explanation on DetNet can be removed.<a href="#section-4.1-1.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<span id="name-a-simple-detnet-enabled-ip-"></span><div id="detnet-arch">
+<figure id="figure-3">
+          <div class="lang-drawing sourcecode" id="section-4.1-2.1">
+<pre>
+ DetNet IP       Relay                        Relay       DetNet IP
+ End System      Node                         Node        End System
+
++----------+                                             +----------+
+|   Appl.  |&lt;------------ End-to-End Service -----------&gt;|   Appl.  |
++----------+  ............                 ...........   +----------+
+| Service  |&lt;-: Service  :-- DetNet flow --: Service  :-&gt;| Service  |
++----------+  +----------+                 +----------+  +----------+
+|Forwarding|  |Forwarding|                 |Forwarding|  |Forwarding|
++--------.-+  +-.------.-+                 +-.---.----+  +-------.--+
+         : Link :       \      ,-----.      /     \   ,-----.   /
+         +......+        +----[  Sub- ]----+       +-[  Sub- ]-+
+                              [Network]              [Network]
+                               `-----'                `-----'
+
+         |&lt;--------------------- DetNet IP ---------------------&gt;|
+</pre>
+</div>
+<figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
+<a href="#name-a-simple-detnet-enabled-ip-" class="selfRef">A Simple DetNet-Enabled IP Network, Ref. RFC8939</a>
+          </figcaption></figure>
+</div>
+<p id="section-4.1-3"><a href="#detnet-arch" class="auto internal xref">Figure 3</a> illustrates a DetNet-IP dataplane divided into two sublayers
+and is specified in <span>[<a href="#RFC8939" class="cite xref">RFC8939</a>]</span> . The forwarding sub-layer is responsible for
+resource allocation and explicit path functions, whereas the service sublayer
+provides packet replications, sequence numbering, and other functions. Within
+the Detnet nodes, resources are allocated a priori for a flow. The
+DetNet-enabled end systems originate traffic encapsulated with Detnet
+forwarding and service sub-layers; otherwise relay node will create those
+based on information received from the end system (via traffic classification).<a href="#section-4.1-3" class="pilcrow">¶</a></p>
+<p id="section-4.1-4">The DetNets support both asynchronous (by allocating resources for the
+observation interval) and synchronous (with repeating schedules) flow behaviors
+(Section 4.3.2 in <span>[<a href="#DETNET-DP" class="cite xref">DETNET-DP</a>]</span>). The granularity of traffic treatment
+is at the flow level specified by 6-tuple information, including DSCP.<a href="#section-4.1-4" class="pilcrow">¶</a></p>
+<p id="section-4.1-5">Realistically, leveraging DetNets for Operations and Control (OCN) traffic
+patterns <a href="#ocn-pattern" class="auto internal xref">Section 3.3</a> directly depends on how DetNets will provide network
+knowledge to the applications.<a href="#section-4.1-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="depend">
+<section id="section-4.2">
+        <h3 id="name-detnet-related-consideratio">
+<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-detnet-related-consideratio" class="section-name selfRef">DetNet related Considerations and Dependencies</a>
+        </h3>
+<p id="section-4.2-1">A DetNet-aware node should express the network requirements as part of either
+forwarding sublayer or service sublayer. <span>[<a href="#DETNET-IP" class="cite xref">DETNET-IP</a>]</span> doesnot specify
+the interface to how those sublayers are mapped. This can be a non-trivial
+task, as an OCN-application, will first need some way to request its DetNet
+service provider (DN-SP). The DN-SP is expected to allocate resources and
+return a mapping  - possibly a DSCP (DetNet Qos) for each pair. This could be
+become a tedius scaling problem as the number of controller-device pairs start
+to grow or keep changing.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.2-2">Given that only DSCP is available, field-device pair can pose issues such as:<a href="#section-4.2-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.2-3.1">How can application request the proper network-resource for each command?<a href="#section-4.2-3.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-4.2-3.2">How can an application  receive periodic data from sensors and with what interval?<a href="#section-4.2-3.2" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-4.2-3.3">What are the ways to differentiate a less sensitive (periodic) updates from
+urgent alarms.<a href="#section-4.2-3.3" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-4.2-3.4">Or  how to differentiate data received from a sensor vs an actuator (with
+stringent latency requirements) and process them accordingly?<a href="#section-4.2-3.4" class="pilcrow">¶</a>
+</li>
+        </ul>
+<p id="section-4.2-4">These issues are described below in more detail.<a href="#section-4.2-4" class="pilcrow">¶</a></p>
+<div id="app">
+<section id="section-4.2.1">
+          <h4 id="name-operator-vs-application-vie">
+<a href="#section-4.2.1" class="section-number selfRef">4.2.1. </a><a href="#name-operator-vs-application-vie" class="section-name selfRef">Operator vs Application view</a>
+          </h4>
+<p id="section-4.2.1-1">The DetNet data plane is designed with a network-operator-centric approach. The
+operator's view on dealing with large-scale networks is discussed in
+<span>[<a href="#I-D.ietf-detnet-scaling-requirements" class="cite xref">I-D.ietf-detnet-scaling-requirements</a>]</span>. In order to use
+resources efficiently, flow aggregation is done. The operators in industrial
+control networks are not necessarily network experts; they simply need an
+application-side tool to dispatch their requests to the Deterministic networks'
+entry point. Especially, an OCN application may need many
+controller-field-device (ctrl-flddev) pairs to be mapped to different
+aggregates.<a href="#section-4.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.1-2">As the number of ctrl-flddev pairs grow, their variable traffic profiles can
+become hard to manage.<a href="#section-4.2.1-2" class="pilcrow">¶</a></p>
+<p id="section-4.2.1-3">The Detnet service provisioning internals should be transparent to an OCN
+application. This can be achieved with a common signaling or user-to-network
+interface between the applications and DetNet.<a href="#section-4.2.1-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="class">
+<section id="section-4.2.2">
+          <h4 id="name-flow-reservation-and-classi">
+<a href="#section-4.2.2" class="section-number selfRef">4.2.2. </a><a href="#name-flow-reservation-and-classi" class="section-name selfRef">Flow reservation and classification</a>
+          </h4>
+<p id="section-4.2.2-1">Inside the DetNet, flow identification is done using IP header and DSCP
+information. These flow identifiers are then used by DetNet nodes to provide
+the corresponding traffic treatment. For a variety of commands and sensor data, latency or interval
+parameters will vary and DSCP maybe limited in expressing all the possible requirements.<a href="#section-4.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.2-2">Embedding requirements explicitly can provide deterministic scheduling even in
+an otherwise link that can be congested  when used with non-deterministic flows.<a href="#section-4.2.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="split">
+<section id="section-4.2.3">
+          <h4 id="name-split-traffic-flows">
+<a href="#section-4.2.3" class="section-number selfRef">4.2.3. </a><a href="#name-split-traffic-flows" class="section-name selfRef">Split Traffic flows</a>
+          </h4>
+<p id="section-4.2.3-1">One of the most constrained design elements in today's industrial control
+systems is that data from the sensors is collected on-site and often aggregated
+before transporting
+to the cloud.  Historical reasons for this approach do not apply anymore.  Due
+to growth in sensor data, it now requires a much larger on-site storage
+infrastructure which is expensive.  Applications also expect real-time
+streaming telemetry data.  Although latency constraints are not as strict as
+for control loops, sensor data need to preserve periodicity (<a href="#ocn-intervals" class="auto internal xref">Section 3.3.2</a>),
+thus could use DetNet service support.<a href="#section-4.2.3-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.3-2">Leveraging DetNet could eliminate split traffic flows by collecting the
+sensor data by the applications. This also allows  controllers to be run and
+operated from the cloud platforms where much more powerful compute capabilities
+and available.<a href="#section-4.2.3-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="prov">
+<section id="section-4.2.4">
+          <h4 id="name-provisioning-for-a-variety-">
+<a href="#section-4.2.4" class="section-number selfRef">4.2.4. </a><a href="#name-provisioning-for-a-variety-" class="section-name selfRef">Provisioning for a variety of Traffic flows</a>
+          </h4>
+<p id="section-4.2.4-1">Different operational scenarios have different constraints; even commands
+within the same application will have different time requirements.<a href="#section-4.2.4-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.2.4-2.1">Different types of latency bounds will be required between a controller and
+an actuator pair based on the type of end-equipment and precision
+requirements. Out-of-order message processing may lead to failures and shutdown
+of operations.  Messages may also be correlated. Therefore, time constraints
+may be applied to a single message or on a group of messages.<a href="#section-4.2.4-2.1" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-4.2.4-2.2">Similarly, each sensor-controller pair may come with its own interval
+requirement. Sensors emit data at regular intervals but this type of
+information may not always be time-constrained. The gaps between the period
+can provide an indication to the controller about communication or other problems.<a href="#section-4.2.4-2.2" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-4.2.4-2.3">Additionally, some faults and alarm messages are urgent reports and must be marked and
+transmitted accordingly.<a href="#section-4.2.4-2.3" class="pilcrow">¶</a>
+</li>
+          </ul>
+<p id="section-4.2.4-3">It is not clear if all these variations can be predictably resolved without any
+additional information offered to the DetNet forwarding plane. For example, if
+two independent OCN flowlets (that is, ordered group of packets that are related at
+process control logic) with variable bounded latency are classified to the same
+DetNet flow, they will receive the same treatment, regardless if one has the
+shorter latency than the other and may end up behind a flowlet with longer
+latency value. On the other hand, if an OCN flowlet have packets with different
+latency values, they could end up in different DetNet flow and may not reach
+destination in a specific order.<a href="#section-4.2.4-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sec">
+<section id="section-4.2.5">
+          <h4 id="name-security">
+<a href="#section-4.2.5" class="section-number selfRef">4.2.5. </a><a href="#name-security" class="section-name selfRef">Security</a>
+          </h4>
+<p id="section-4.2.5-1">Industrial control networks also have split security boundaries. They have been
+designed to be air-gapped or secure by separation.  This is not ideal for
+remote operations and control. Current systems deploy strict admission control
+policies on both ingress and egress directions.<a href="#section-4.2.5-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.5-2">With the growing volume of traffic in control networks, the border gateways and
+firewalls will need to incorporate a large number of flow rules; this can be more
+prone to errors related to provisioning churns, especially if the system is
+dynamic or continuously changing.<a href="#section-4.2.5-2" class="pilcrow">¶</a></p>
+<p id="section-4.2.5-3">Application flows can be protected at the network layer as described in the
+<span>[<a href="#RFC9055" class="cite xref">RFC9055</a>]</span> Section 10. In case applications provide additional data (metadata)
+to the network layer, the integrity of metadata has to be protected from  the
+application endpoint to the DetNet edge<a href="#section-4.2.5-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="summary-of-gaps">
+<section id="section-4.3">
+        <h3 id="name-summary-of-gaps">
+<a href="#section-4.3" class="section-number selfRef">4.3. </a><a href="#name-summary-of-gaps" class="section-name selfRef">Summary of Gaps</a>
+        </h3>
+<ul class="normal">
+<li class="normal" id="section-4.3-1.1">Application view (<a href="#app" class="auto internal xref">Section 4.2.1</a>: An OCN application is unaware of how DetNet services are
+provisioned. A common UNI between the applications and DetNet-enabled
+the network needs to be added to the current framework to better map the
+expectations better.<a href="#section-4.3-1.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-4.3-1.2">Security (<a href="#sec" class="auto internal xref">Section 4.2.5</a>):  metadata that is related to process control and operation which will be used by the network
+must be secured.<a href="#section-4.3-1.2" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-4.3-1.3">Traffic behavior (<a href="#prov" class="auto internal xref">Section 4.2.4</a> and <a href="#class" class="auto internal xref">Section 4.2.2</a>): Within the same DetNet flow, classified via
+6-tuple, additional information/metadata must be supported so that dynamic
+traffic patterns can be scheduled deterministically.<a href="#section-4.3-1.3" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-4.3-1.4">Split traffic (<a href="#split" class="auto internal xref">Section 4.2.3</a>): Leveraging DetNet should eliminate split traffic
+flows by direct collection of sensor data by the applications. This also
+allows  controllers to be run and operated from the cloud platforms where much
+more powerful compute capabilities are available.<a href="#section-4.3-1.4" class="pilcrow">¶</a>
+</li>
+        </ul>
+</section>
+</div>
+</section>
+</div>
+<div id="approaches">
+<section id="section-5">
+      <h2 id="name-detnet-potential-approach">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-detnet-potential-approach" class="section-name selfRef">DetNet Potential Approach</a>
+      </h2>
+<p id="section-5-1">Remote process automation presents different types of traffic profiles and to
+deal with them within the DetNet framework, we discuss a few possibilities.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-2">The DetNet UNI will enable applications to convey specific requirements to
+DetNet-aware Network. Note that it is just an interface and is blind to the
+internal implementation of such networks.<a href="#section-5-2" class="pilcrow">¶</a></p>
+<p id="section-5-3">The DetNet architecture does not describe how DetNet-aware nodes can design DetNet sub-layers.
+ But even from the view of an end system, the separation between
+forwarding and service sublayer functions should be maintained. This means, the DSCP should not be
+overloaded and DetNet-IP forwarding layer should be extended.<a href="#section-5-3" class="pilcrow">¶</a></p>
+<div id="application-association-to-forwarding-sublayer">
+<section id="section-5.1">
+        <h3 id="name-application-association-to-">
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-application-association-to-" class="section-name selfRef">Application association to Forwarding sublayer</a>
+        </h3>
+<p id="section-5.1-1">Applications should convey specific resource requirements to the DetNets they
+connect to. There are two potential options: (a) The DetNet Relay-node performs
+translation and binding to one of the DetNet services in the DetNet; or (b) carry
+the application-defined data over DetNet as is and enables processing on transit nodes.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="encapsulation">
+<section id="section-5.2">
+        <h3 id="name-encapsulation">
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-encapsulation" class="section-name selfRef">Encapsulation</a>
+        </h3>
+<p id="section-5.2-1">OCN applications are expected to be IP based end stations. (MPLS DetNet will not apply). It is also reasonable to assume that the applications are IPv6 capable; therefore, Ipv6 extension headers can be used to
+request network services inband. With an IPv4 data plane, the encapsulations could potentially be over UDP; however, that is not the focus of this document. This document specifically deals with HBH IP6 extension headers mechanisms to interface with a Deterministic Network.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.2-2">The end system network requirement is expressed as 'OCN flow QoS'.
+Each packet carries its own unique OCN-QoS. The metadata to be transmitted to DetNet are:<a href="#section-5.2-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.2-3">
+<pre>
+  - Async traffic with latency information.
+  - Sync, periodic traffic
+  - urgency of messages
+  - Flowlet identification (for related packets).
+</pre><a href="#section-5.2-3" class="pilcrow">¶</a>
+</div>
+<p id="section-5.2-4">This can be implemented using the HBH extension header option.<a href="#section-5.2-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="operation-and-control-network-option-ocno">
+<section id="section-5.3">
+        <h3 id="name-operation-and-control-netwo">
+<a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-operation-and-control-netwo" class="section-name selfRef">Operation and Control Network Option (OCNO)</a>
+        </h3>
+<p id="section-5.3-1">The OCN Option (OCNO) is a hop-by-hop option that can
+   be included in IPv6 for OCN traffic control extensions.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
+<span id="name-explicit-traffic-control-hb"></span><div id="ocn-detnet">
+<figure id="figure-4">
+          <div class="lang-drawing sourcecode" id="section-5.3-2.1">
+<pre>
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+                                   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+                                   |  Option Type  |  Opt Data Len |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   | OCNF flags     |   OCN-TC-Flowlet nonce       |  sequence     |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                (bounded latency spec)                         |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                (Delay variation spec)                         |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</pre>
+</div>
+<figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
+<a href="#name-explicit-traffic-control-hb" class="selfRef">Explicit Traffic Control HBH Options</a>
+          </figcaption></figure>
+</div>
+<span class="break"></span><dl class="dlNewline" id="section-5.3-3">
+          <dt id="section-5.3-3.1">Option Type:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.3-3.2">
+            <p id="section-5.3-3.2.1">8-bit identifier of the type of option.  The option identifier
+   for the OCN Option (0x??) to be allocated by the IANA. First two bits
+  will be 00 (skip over this option and continue processing the header.)<a href="#section-5.3-3.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.3-3.3">Option Length:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.3-3.4">
+            <p id="section-5.3-3.4.1">8-bit unsigned integer. Multiple of 8-octets.<a href="#section-5.3-3.4.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.3-3.5">OCN Function Flags:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.3-3.6">
+            <p id="section-5.3-3.6.1">Some flags require metadata, while others don't.  So process flags in order, if the
+flag is off,  the following metadata will not be present.<a href="#section-5.3-3.6.1" class="pilcrow">¶</a></p>
+<table class="center" id="table-1">
+              <caption><a href="#table-1" class="selfRef">Table 1</a></caption>
+<thead>
+                <tr>
+                  <th class="text-right" rowspan="1" colspan="1">Flag</th>
+                  <th class="text-left" rowspan="1" colspan="1">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="text-right" rowspan="1" colspan="1">U</td>
+                  <td class="text-left" rowspan="1" colspan="1">send the message immediately. its an alarm</td>
+                </tr>
+                <tr>
+                  <td class="text-right" rowspan="1" colspan="1">P</td>
+                  <td class="text-left" rowspan="1" colspan="1">periodic packet (intervals in ~ms)</td>
+                </tr>
+                <tr>
+                  <td class="text-right" rowspan="1" colspan="1">F</td>
+                  <td class="text-left" rowspan="1" colspan="1">part of flowlet. see Nonce and seq</td>
+                </tr>
+                <tr>
+                  <td class="text-right" rowspan="1" colspan="1">L</td>
+                  <td class="text-left" rowspan="1" colspan="1">bounded latency spec provided</td>
+                </tr>
+                <tr>
+                  <td class="text-right" rowspan="1" colspan="1">R</td>
+                  <td class="text-left" rowspan="1" colspan="1">Reliability with no packet loss tolerance</td>
+                </tr>
+                <tr>
+                  <td class="text-right" rowspan="1" colspan="1">V</td>
+                  <td class="text-left" rowspan="1" colspan="1">Delay variation with no packet loss tolerance</td>
+                </tr>
+              </tbody>
+            </table>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.3-3.7">Flowlet nonce:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.3-3.8">
+            <p id="section-5.3-3.8.1">16-bit. identifies that a packet is associated with a group of packets and shares fate.
+ as an example, an application can set the same nonce for a set of an actuator and sensors.
+when set to 0, flow id is set to the same value in related flows. when flow id is also 0, no
+relationship exists.<a href="#section-5.3-3.8.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.3-3.9">Flowlet sequence:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.3-3.10">
+            <p id="section-5.3-3.10.1">8-bit. sequence to be used for ordering within flowlets.<a href="#section-5.3-3.10.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.3-3.11">Bound Latency Spec:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.3-3.12">
+            <p id="section-5.3-3.12.1">32-bit. Encodings, to be defined.<br>
+16-bit (upper bound), 16-bit (lower bound). This field will provide upper and lower
+latency bounds describing the latency bounds in milliseconds corresponding
+to the packet.<a href="#section-5.3-3.12.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.3-3.13">Delay Variation Spec:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.3-3.14">
+            <p id="section-5.3-3.14.1">16-bit. for a synchronous stream, delay variation tolerance in ms.<a href="#section-5.3-3.14.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="ocno-operation">
+<section id="section-5.4">
+        <h3 id="name-ocno-operation">
+<a href="#section-5.4" class="section-number selfRef">5.4. </a><a href="#name-ocno-operation" class="section-name selfRef">OCNO Operation</a>
+        </h3>
+<span id="name-an-interface-from-controlle"></span><div id="ocn-interface">
+<figure id="figure-5">
+          <div class="lang-drawing sourcecode" id="section-5.4-1.1">
+<pre>
+   OCN
+ Controller         Ingress Relay        Egress Relay      OCN
++----------+             Node                Node        fld-device
+|   Appl.  |          &lt;----------DetNet-Service ------&gt;   +-----+
++----------+        ............           ...........    |Appl.|
+| OCNO-EH  :--UNI--&gt;: Service  :-- DetNet -: Service  :   +-----+
++----------+        +----------+           +----------+   |IPv6 |
+| Ipv6     |        |Forwarding|           |Forwarding|   +-----+
++--------.-+        +---.------+           +----------+
+    :   : OCN scope    :                         :
+    :   +..............+                         :
+    :--------------------------------------------:
+              extended scope
+</pre>
+</div>
+<figcaption><a href="#figure-5" class="selfRef">Figure 5</a>:
+<a href="#name-an-interface-from-controlle" class="selfRef">An interface from controller application to DetNet</a>
+          </figcaption></figure>
+</div>
+</section>
+</div>
+<div id="ocno-extension-header-signaling">
+<section id="section-5.5">
+        <h3 id="name-ocno-extension-header-signa">
+<a href="#section-5.5" class="section-number selfRef">5.5. </a><a href="#name-ocno-extension-header-signa" class="section-name selfRef">OCNO Extension Header Signaling</a>
+        </h3>
+<p id="section-5.5-1">The current definition of OCNO only covers applications to DetNet unidirectional interface. It is possible to extend OCNO EH for conveying errors from DetNet to the controller as well - for example, when a service violation happened in the DetNet, the Relay node will set an error flag in OCNO EH. Field devices are considered resource-constrained and are not expected to insert or process extension headers.
+Due to flow aggregation, it is up to the DetNet operator to design mapping between an application and the DetNet.<a href="#section-5.5-1" class="pilcrow">¶</a></p>
+<p id="section-5.5-2">Two different options of carrying hop-by-hop options are considered.<a href="#section-5.5-2" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-5.5-3">
+<li id="section-5.5-3.1">EH is inserted by the application and the Relay node performs mapping to DetNet flow.<a href="#section-5.5-3.1" class="pilcrow">¶</a>
+</li>
+          <li id="section-5.5-3.2">if the DetNet data plane is IPv6, then EH can be carried all the way to the last Relay node, which
+acts as a gateway for the fld device and performs EH-specific functions.<a href="#section-5.5-3.2" class="pilcrow">¶</a>
+</li>
+        </ol>
+</section>
+</div>
+</section>
+</div>
+<div id="iana-considerations">
+<section id="section-6">
+      <h2 id="name-iana-considerations">
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+      </h2>
+<p id="section-6-1">To request an option code.<a href="#section-6-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="security-considerations">
+<section id="section-7">
+      <h2 id="name-security-considerations">
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+      </h2>
+<p id="section-7-1">See the section on security above.<a href="#section-7-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="acknowledgements">
+<section id="section-8">
+      <h2 id="name-acknowledgements">
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-acknowledgements" class="section-name selfRef">Acknowledgements</a>
+    </h2>
+</section>
+</div>
+<section id="section-9">
+      <h2 id="name-references">
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-references" class="section-name selfRef">References</a>
+      </h2>
+<section id="section-9.1">
+        <h3 id="name-normative-references">
+<a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+        </h3>
+<dl class="references">
+<dt id="DETNET-DP">[DETNET-DP]</dt>
+        <dd>
+<span class="refAuthor">Finn, N.</span>, <span class="refAuthor">Thubert, P.</span>, <span class="refAuthor">Varga, B.</span>, and <span class="refAuthor">J. Farkas</span>, <span class="refTitle">"Deterministic Networking Architecture"</span>, <span class="seriesInfo">RFC 8655</span>, <span class="seriesInfo">DOI 10.17487/RFC8655</span>, <time datetime="2019-10" class="refDate">October 2019</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8655">https://www.rfc-editor.org/rfc/rfc8655</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="DETNET-IP">[DETNET-IP]</dt>
+        <dd>
+<span class="refAuthor">Varga, B., Ed.</span>, <span class="refAuthor">Farkas, J.</span>, <span class="refAuthor">Berger, L.</span>, <span class="refAuthor">Fedyk, D.</span>, and <span class="refAuthor">S. Bryant</span>, <span class="refTitle">"Deterministic Networking (DetNet) Data Plane: IP"</span>, <span class="seriesInfo">RFC 8939</span>, <span class="seriesInfo">DOI 10.17487/RFC8939</span>, <time datetime="2020-11" class="refDate">November 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8939">https://www.rfc-editor.org/rfc/rfc8939</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.ietf-detnet-scaling-requirements">[I-D.ietf-detnet-scaling-requirements]</dt>
+        <dd>
+<span class="refAuthor">Liu, P.</span>, <span class="refAuthor">Li, Y.</span>, <span class="refAuthor">Eckert, T. T.</span>, <span class="refAuthor">Xiong, Q.</span>, <span class="refAuthor">Ryoo, J.</span>, <span class="refAuthor">zhushiyin</span>, and <span class="refAuthor">X. Geng</span>, <span class="refTitle">"Requirements for Scaling Deterministic Networks"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-detnet-scaling-requirements-03</span>, <time datetime="2023-07-07" class="refDate">7 July 2023</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-detnet-scaling-requirements-03">https://datatracker.ietf.org/doc/html/draft-ietf-detnet-scaling-requirements-03</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8939">[RFC8939]</dt>
+        <dd>
+<span class="refAuthor">Varga, B., Ed.</span>, <span class="refAuthor">Farkas, J.</span>, <span class="refAuthor">Berger, L.</span>, <span class="refAuthor">Fedyk, D.</span>, and <span class="refAuthor">S. Bryant</span>, <span class="refTitle">"Deterministic Networking (DetNet) Data Plane: IP"</span>, <span class="seriesInfo">RFC 8939</span>, <span class="seriesInfo">DOI 10.17487/RFC8939</span>, <time datetime="2020-11" class="refDate">November 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8939">https://www.rfc-editor.org/rfc/rfc8939</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9055">[RFC9055]</dt>
+      <dd>
+<span class="refAuthor">Grossman, E., Ed.</span>, <span class="refAuthor">Mizrahi, T.</span>, and <span class="refAuthor">A. Hacker</span>, <span class="refTitle">"Deterministic Networking (DetNet) Security Considerations"</span>, <span class="seriesInfo">RFC 9055</span>, <span class="seriesInfo">DOI 10.17487/RFC9055</span>, <time datetime="2021-06" class="refDate">June 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9055">https://www.rfc-editor.org/rfc/rfc9055</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+<section id="section-9.2">
+        <h3 id="name-informative-references">
+<a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+        </h3>
+<dl class="references">
+<dt id="FACTORY">[FACTORY]</dt>
+        <dd>
+<span class="refAuthor">Westphal, C.</span>, <span class="refAuthor">Makhijani, K.</span>, <span class="refAuthor">Dev, K.</span>, and <span class="refAuthor">L. Foschini</span>, <span class="refTitle">"OCN Use Cases for Industry control Networks"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-wmdf-ocn-use-cases-00</span>, <time datetime="2022-07-07" class="refDate">7 July 2022</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-wmdf-ocn-use-cases-00">https://datatracker.ietf.org/doc/html/draft-wmdf-ocn-use-cases-00</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="NIST-OT">[NIST-OT]</dt>
+        <dd>
+<span class="refTitle">"Risk management framework for information systems and organizations:: a system life cycle approach for security and privacy"</span>, <span class="refContent">National Institute of Standards and Technology</span>, <span class="seriesInfo">DOI 10.6028/nist.sp.800-37r2</span>, <time datetime="2018-12" class="refDate">December 2018</time>, <span>&lt;<a href="https://doi.org/10.6028/nist.sp.800-37r2">https://doi.org/10.6028/nist.sp.800-37r2</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="PTP-GRID">[PTP-GRID]</dt>
+        <dd>
+<span class="refTitle">"IEC/IEEE International Standard - Communication networks and systems for power utility automation – Part 9-3: Precision time protocol profile for power utility automation"</span>, <span class="refContent">IEEE</span>, <span class="seriesInfo">DOI 10.1109/ieeestd.2016.7479438</span>, <span class="seriesInfo">ISBN ["9781504420174"]</span>, <time datetime="2016-08" class="refDate">August 2016</time>, <span>&lt;<a href="https://doi.org/10.1109/ieeestd.2016.7479438">https://doi.org/10.1109/ieeestd.2016.7479438</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="VIRT-PLC">[VIRT-PLC]</dt>
+      <dd>
+<span class="refAuthor">Makhijani, K.</span> and <span class="refAuthor">L. Dong</span>, <span class="refTitle">"Virtualization of PLC in Industrial Networks - Problem Statement"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-km-iotops-iiot-frwk-02</span>, <time datetime="2022-03-05" class="refDate">5 March 2022</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-km-iotops-iiot-frwk-02">https://datatracker.ietf.org/doc/html/draft-km-iotops-iiot-frwk-02</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</section>
+<div id="authors-addresses">
+<section id="appendix-A">
+      <h2 id="name-authors-addresses">
+<a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
+      </h2>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Kiran Makhijani</span></div>
+<div dir="auto" class="left"><span class="org">Futurewei</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:kiran.ietf@gmail.com" class="email">kiran.ietf@gmail.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Tooba Faisal</span></div>
+<div dir="auto" class="left"><span class="org">King's College London</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:tooba.hashmi@gmail.com" class="email">tooba.hashmi@gmail.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Richard Li</span></div>
+<div dir="auto" class="left"><span class="org">Futurewei</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:richard.li@futurewei.com" class="email">richard.li@futurewei.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Cedric Westphal</span></div>
+<div dir="auto" class="left"><span class="org">Futurewei</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:cedric.westphal@futurewei.com" class="email">cedric.westphal@futurewei.com</a>
+</div>
+</address>
+</section>
+</div>
+<script>const toc = document.getElementById("toc");
+toc.querySelector("h2").addEventListener("click", e => {
+  toc.classList.toggle("active");
+});
+toc.querySelector("nav").addEventListener("click", e => {
+  toc.classList.remove("active");
+});
+</script>
+</body>
+</html>

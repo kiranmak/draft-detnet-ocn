@@ -1,0 +1,103 @@
+{
+  "magic": "E!vIA5L86J2I",
+  "timestamp": "2023-08-27T01:08:09.243142+00:00",
+  "repo": "kiranmak/draft-detnet-ocn",
+  "labels": [
+    {
+      "name": "bug",
+      "description": "Something isn't working",
+      "color": "d73a4a"
+    },
+    {
+      "name": "documentation",
+      "description": "Improvements or additions to documentation",
+      "color": "0075ca"
+    },
+    {
+      "name": "duplicate",
+      "description": "This issue or pull request already exists",
+      "color": "cfd3d7"
+    },
+    {
+      "name": "enhancement",
+      "description": "New feature or request",
+      "color": "a2eeef"
+    },
+    {
+      "name": "help wanted",
+      "description": "Extra attention is needed",
+      "color": "008672"
+    },
+    {
+      "name": "good first issue",
+      "description": "Good for newcomers",
+      "color": "7057ff"
+    },
+    {
+      "name": "invalid",
+      "description": "This doesn't seem right",
+      "color": "e4e669"
+    },
+    {
+      "name": "question",
+      "description": "Further information is requested",
+      "color": "d876e3"
+    },
+    {
+      "name": "wontfix",
+      "description": "This will not be worked on",
+      "color": "ffffff"
+    }
+  ],
+  "issues": [
+    {
+      "number": 1,
+      "id": "I_kwDOJoAM3c5tzGYS",
+      "title": "remove transport related text",
+      "url": "https://github.com/kiranmak/draft-detnet-ocn/issues/1",
+      "state": "CLOSED",
+      "author": "kiranmak",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "https://github.com/kiranmak/draft-detnet-ocn/blob/9336766653ad026dc8eb5bb6d53686deda0a9aa5/draft-km-detnet-for-ocn.md?plain=1#L574C1-L576C33",
+      "createdAt": "2023-08-08T21:16:24Z",
+      "updatedAt": "2023-08-08T21:38:47Z",
+      "closedAt": "2023-08-08T21:38:47Z",
+      "comments": []
+    },
+    {
+      "number": 2,
+      "id": "I_kwDOJoAM3c5tzLUy",
+      "title": "sentence looks like a standalone statement. Describe that concerns in more detail. Maybe elaborate text from detnet architecture document",
+      "url": "https://github.com/kiranmak/draft-detnet-ocn/issues/2",
+      "state": "CLOSED",
+      "author": "kiranmak",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "https://github.com/kiranmak/draft-detnet-ocn/blob/9336766653ad026dc8eb5bb6d53686deda0a9aa5/draft-km-detnet-for-ocn.md?plain=1#L571C1-L572C71",
+      "createdAt": "2023-08-08T21:33:14Z",
+      "updatedAt": "2023-08-08T21:39:00Z",
+      "closedAt": "2023-08-08T21:39:00Z",
+      "comments": []
+    },
+    {
+      "number": 3,
+      "id": "I_kwDOJoAM3c5tzLiJ",
+      "title": "Elaborate what security you expect. see previous issue #2",
+      "url": "https://github.com/kiranmak/draft-detnet-ocn/issues/3",
+      "state": "CLOSED",
+      "author": "kiranmak",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "https://github.com/kiranmak/draft-detnet-ocn/blob/9336766653ad026dc8eb5bb6d53686deda0a9aa5/draft-km-detnet-for-ocn.md?plain=1#L585C24-L586C20",
+      "createdAt": "2023-08-08T21:34:05Z",
+      "updatedAt": "2023-08-08T21:38:41Z",
+      "closedAt": "2023-08-08T21:38:41Z",
+      "comments": []
+    }
+  ],
+  "pulls": []
+}
