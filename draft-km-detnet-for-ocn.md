@@ -1,7 +1,7 @@
 ---
 abbrev: ocn-in-detnets
 docname: draft-km-detnet-for-ocn-latest
-title: Using Deterministic Networks for Industry Operations and Control
+title: Using Deterministic Networks for Industrial Operations and Control
 date:  false
 category: info
 stream: independent
@@ -21,12 +21,6 @@ author:
     name: Kiran Makhijani
     organization: Futurewei
     email: kiran.ietf@gmail.com
-
--
-    ins: T. Faisal
-    name:  Tooba Faisal
-    organization: King's College London
-    email: tooba.hashmi@gmail.com
 -
     ins: R. Li
     name: Richard Li
@@ -37,6 +31,16 @@ author:
     name: Cedric Westphal
     org: Futurewei
     email: cedric.westphal@futurewei.com
+-
+    ins: L. Contreras
+    name: Luis M. Contreras
+    org: Telefonica
+    email: luismiguel.contrerasmurillo@telefonica.com
+-
+    ins: T. Faisal
+    name:  Tooba Faisal
+    organization: King's College London
+    email: tooba.hashmi@gmail.com
 
 informative:
   FACTORY:   I-D.wmdf-ocn-use-cases
@@ -59,26 +63,26 @@ networks from the view of endpoints to support process control and operations.
 
 Process automation systems involve operating a piece of equipment (such as
 actuating and/or sensing field devices). The communication between the
-controllers and field devices exhibits a well-defined set of behaviors and
+'process controllers' and field devices exhibits a well-defined set of behaviors and
 has specific characteristics: the delivery of a control-command to a
 machine must be executed within the time frame specified by a controller or
 by an application to provide reliable and secure operation.  A low or zero
 tolerance to latency and packet losses (among other things) is implied.
 
-The endpoints (controllers and field devices) embody machine-to-machine
+The endpoints ('process controllers' and field devices) embody machine-to-machine
 communications to facilitate both remote and local process automation. In this
 document, networks that support all the characteristics of remote process
 automation are referred to as Operation and Control Networks (OCNs) for
 convenience. This document describes using DetNet to enable OCN applications
  since they provide mechanisms for guaranteed delay aware packet delivery,
-reliability, and packet loss mitigation.
+reliability, and for packet loss mitigation.
 
 This document defines the interface between an OCN application and the DetNet
 framework. i.e., using DetNet services for communication between the
 controllers and the field devices. This interface is used by an application to
 express its network-specific requirements. This document presents the
-perspective of an end system. Because general-purpose applications widely use IP
-network stack and provide more connection flexibility to end
+perspective of an end system. Because IP network stack is widely used by
+general-purpose applications and provides more connection flexibility to end
 systems, the scope of our discussion is specific to the IP-enabled
 DetNet data planes {{!DETNET-DP=RFC8655}}. For the other type of field devices,
 a service level proxy is assumed (section  4.1 in RFC8655).
@@ -100,6 +104,14 @@ monitoring and/or control of devices, processes, and events. Examples include
 industrial control systems, building management systems, fire control systems,
 and physical access control mechanisms. Source: {{NIST-OT}}
 
+- process controller:
+  : Is a logic control function used in process automation and control systems.
+A process controller maintains the operational requirement of a process and
+performs functions similar to programmable logic controllers (PLCs) but it can
+be either a hardware or software component. The term process controller is used
+through out to avoid confusion with 'network controllers' used in network
+infrastructures.
+
 - Industrial Automation:
   : Mechanisms that enable machine-to-machine communication by use of
 technologies that enable automatic control and operation of industrial devices
@@ -107,7 +119,7 @@ and processes leading to minimizing human intervention.
 
 - Control Loop:
  : Control loops are part of process control systems in which
-desired process response is provided as input to the controller, which
+desired process response is provided as input to the 'process controller', which
 performs the corresponding action (using actuators) and reads the output values.
 Since no error correction is performed, these are called open control loops.
 
@@ -120,7 +132,7 @@ the system's output is used as input for future operations.
 interconnection of equipment used for the operation, control, or monitoring of
 machines in the industrial environment. It involves a different level of
 communication - between fieldbus devices, digital controllers, and software
-applications
+applications.
 
 - Human Machine Interface (HMI):
 : An interface between the operator and the machine.
@@ -142,21 +154,23 @@ An industrial control network interconnects devices used to operate, control and
 monitor physical equipment in industrial environments. {{icn-arch}} below shows
 such systems' reference model and functional components. Closest to the
 physical equipment are field devices (actuators and sensors) that connect to
-the Programmable Logic Controllers (PLCs) or other types of controllers using
-serial bus technologies (and now Ethernet).  Above those controllers are Human
-Machine Interface (HMI) connecting different PLCs and performing several
-controller functions along with exchanging data with the applications.
+the Programmable Logic Controllers (PLCs) or other types of controllers (Note:
+in this memo term 'process controller' will be used to differentiate
+from other meanings of controller) using serial bus technologies (and now
+Ethernet).  Above those 'process controllers' are Human Machine Interface (HMI)
+connecting different PLCs and performing several controller functions along
+with exchanging data with the applications.
 
 A factory floor is divided into cell sites. The PLCs or other types of
 controllers are physically located close to the equipment in the cell sites.
 The collection of monitoring, status, and sensing data is first done on the site
 and then transmitted over secure channels to the data applications for
 aggregation and further processing. These applications can be hosted
-in remote cloud infrastructure but are also often hosted within a
+in remote cloud infrastructure, but are also often hosted within a
 limited domain environment, controlled by a single operator, like
 on-premise, at the edge or in a private cloud. Both options gain
 from infrastructure that scales out, and has elastic compute and storage
-resources, so they will be referred to as cloud in the following sections.
+resources, so they will both be referred to as cloud in the following sections.
 
 ~~~~~drawing
 
@@ -212,47 +226,47 @@ virtualization {{VIRT-PLC}}, power grid operations {{PTP-GRID}}, etc. that are n
 expected to operate in the cloud by leveraging virtualization and shared
 infrastructure wherever possible.
 
-## Connected Controllers, Sensors and Actuators
+## Connected Process-Controllers, Sensors and Actuators
 
 {::comment}
 ## Reference Points for Connecting Controllers, Sensors and Actuators
 {:/comment}
 
-Control systems comprise Controllers, Sensors and Actuators. The data
+Control systems comprise 'process controllers', Sensors and Actuators. The data
 traffic essentially carries instructions that cause machines or equipment
 to move and do things within or at a specific time. The connectivity exists in
 the following manner:
 
-- A controller interfaces with the sensors and actuators. The controller knows an
+- A 'process controller' interfaces with the sensors and actuators. It knows an
 application's performance parameters which are expressed in terms of network
 specific requests or resources such as tolerance to packet loss, latency limits,
-jitter variance, bandwidth, and specification for safety.  The controller knows
+jitter variance, bandwidth, and specification for safety.  The 'process controller' knows
 all the packet delivery constraints.
 
-- An actuator receives specific commands from the controllers. The DetNet should
-be able to enable control of actuating devices remotely from the controller
-while meeting all the requirements (or key performance indicators - KPIs)
-necessary for successful command
-execution. The actuator participates in a closed control loop as needed.
+- An actuator receives specific commands from the 'process controllers'. The
+  Deterministic network between them should support control of actuating
+devices remotely from the 'process controller' while meeting all the
+requirements (or key performance indicators - KPIs) necessary for successful
+command execution. The actuator participates in a closed control loop as needed.
 
 - A sensor emit periodic data from the sensors. It may intermittently provide
-asynchronous readings upon request from the controller. Sensors may report
-urgent messages regarding malfunctioning in certain equipment, cell sites, or
+asynchronous readings upon request from the 'process controller'. Sensors may report
+urgent messages regarding malfunctioning in certain equipment, cell-sites, or
 zones.
 
-In many control systems, there is at least one controller (or server) entity on
+In many control systems, there is at least one 'process controller' (or server) entity on
 one end and two other entities - the sensors and actuators on the other end.
-The communication with sensors and actuators is through the controller entity;
+The communication with sensors and actuators is through the 'process controller' entity;
 as such data applications do not directly interact with the field devices.
 Neither actuators nor sensors perform decision-making tasks. This
-the responsibility belongs to the controller.
+responsibility belongs to the 'process controller'.
 
 ## Generalized Communication Model
 
 To describe networked process control behavior, a conceptual communication model
 is used so that the data applications do not concern with the details of the
 networks realizing operations and control. We refer to this model as an operation
-and control network (OCN). The scope of the model is
+and control network (OCN) model, with the following components:
 
 - Logical reference points: identify an endpoint's role or function as
   sensor-point, actuation-point, or operation & control point (oc-point for
@@ -266,7 +280,7 @@ type of network (Ethernet, IP, wireless, etc. The model assumes that the
 network is capable of providing network services and resources necessary of the
 application specific operations and control.
 
-Depending on the design of the use case, the process controller functionality
+Depending on the design of the usecase, the 'process controller' functionality
 (oc-point) may reside as a software module in the data application or as a
 separate module. When deployed as a separate module, another connectivity
 the interface between the data application and oc-point will be needed and is out
@@ -289,10 +303,13 @@ field devices such as:
 ### Control Loops {#c-loop}
 
 The equipment being operated upon is sensitive to when a command request
-actually executes. An actuator, upon receiving a command (function code) will
-immediately perform the corresponding action. It is the responsibility of network
-and controller to ensure that the behavior of the sensor and actuator follows the
+actually executes. An actuator, upon receiving a command (say a function code) will
+immediately perform the corresponding action.
+{::comment}
+It is the responsibility of network
+and 'process controller' to ensure that behavior of the sensor and actuator follows the
 expectations of applications.
+{:/comment}
 
 For several such applications, the knowledge of a successful operation is equally
 critical to advance to the next steps; therefore, getting the response back in
@@ -300,7 +317,7 @@ a specified time is required, leading to a knowledge of timing. These types of
 bounded-time request and response mechanisms are called control loops.
 
 Unlike general-purpose applications, commands cannot be batched; the
-parameters of the command that will follow depend on the result of the previous one.
+parameters of the command that will follow depends on the result of the previous one.
 Each request in the control loop takes up a minimal payload size (function code,
 value, device or bus address) and will often fit in a single short packet.
 
@@ -308,16 +325,22 @@ In Detnet-enabled network, it can be imagined as a small series of packets with
 the same flow identifier, but with different latency constraints.
 
 It is required to support control loops where each request presents its own
-latency constraints to the network and where commands are small-sized packets.
+latency constraints to the network and where commands are small sized packets.
 
 ###  Periodicity {#ocn-intervals}
 
-Sensors emit data at regular intervals, but this information may not always be
-time-constrained. Usually, controllers are programmed to tolerate and record
-intermittent losses.  Automation software can make a more informed decision by
-monitoring a lot of sensor data.  Thus, the traffic volume generated by sensors is
-expected to high.  The periodicity of each sensor can also vary based on the
-equipment.
+Sensors emit data at regular intervals; i.e., there may be more tolerance to
+variations in jitter between the measurement intervals. Usually, 'process
+controllers' or applications listening to sensor data are programmed to
+tolerate and record intermittent losses or delay variations upto certain number
+of times. Therefore, time criticality is not always high.
+
+Notably, industrial software now increasingly rely on sensor data collection to
+monitor the state and behavior of the entire shop floor.  Thus, the number of
+sensors are growing and the combined traffic volume generated by sensors is
+expected to be very high. In fact will contribute to a large percentage of ocn traffic.
+Moreover, the periodicity of each sensor will also vary based
+on the equipment.
 
 It is required that network capacity is planned appropriately for the periodic
 traffic generated from the different sensors. The periodic interval should also
@@ -326,12 +349,11 @@ indications that the equipment is misbehaving.
 
 ### Ordering
 
-In real-time process control communications, out of order message processing
-will lead to costly failures of operations.  Messages such as request and
-reply, or a sequence of commands may be correlated therefore, both time
-constraints and order must be preserved. The traffic is generated when software
-triggers control-commands to field devices. This may not always map into
-asynchronous DetNet flows if observation interval is not known.
+In real-time process control communications, out of order processing of related
+messages will lead to costly failures of operations.  For example, Messages
+such as request and reply, or a sequence of commands to different endpoints may
+be related in some
+way. therefore, both time constraints and order must be preserved.
 
 The network should be capable of supporting sporadic on-demand short-term flows.
 This does not imply instantaneous resource provisioning, instead it would be
@@ -356,16 +378,16 @@ immediately.
 
 Control systems follow a specific communication discipline. The field devices
 (sensors and actuators) are always controlled, i.e., interact with the system
-through controllers in the following manner:-
+through 'process controllers' in the following manner:-
 
-- Sensor to controller: data emitted at periodic interval providing
+- Sensor to 'process controller': data emitted at periodic interval providing
   status/health of the environment or equipment. The  traffic volume for this
 communication is determined by the payload size of each  sensor data and the
 interval. These are a kind of synchronous Detnet flows but with much higher time intervals; still the inter-packet gap should be minimum.
 
-- Controller to/from actuator: the commands/instructions to write or read.
+- Process controller to/from actuator: the commands/instructions to write or read.
   Actuators generally do not initiate a command unless requested by the
-controller. Actuators will often execute a command, read the corresponding
+'process controller'. Actuators will often execute a command, read the corresponding
 result, and send that in response to the original write command.  The traffic
 profile will be balanced in both directions due to requests/ response behavior. These are like asynchronous flows but without the observation interval constraint.
 
@@ -376,28 +398,38 @@ be pre-programmed).
 {:/comment}
 
 
-# Gap Analysis {#gaps}
+# Industrial Control Application Interfaces to DetNets {#gaps}
 
-Today, most of the operations and control solutions are split approaches. This
-means that the controller is on-premises close to the equipment, sensor data is
-first collected on-site, and then bulk transmitted to the enterprise cloud for
-further processing.
+Note: use which term for disambiguation? process-controller or industrial-controller?
 
-To support delivering remote instructions to the machines over wide area
-networks using Deterministic Network data plane architecture
-{{!DETNET-DP=RFC8655}} and corresponding data plane DetNet over IP
-{{!DETNET-IP=RFC8939}} mechanisms apply as discussed in {{detnet-rel}}. Later in
-{{depend}} additional asks from DetNet are covered.
+Current industrial automation solutions utilize a split approach. Industrial-controllers are placed close to the equipment to achieve operational accuracy, whereas actual process instructions are received through other means possibly involving human interface. Similarly, sensor data is first acquired on-site then transmitted in bulk to the enterprise cloud or remote site for further processing. Such approaches lead to increase in IT infrastructure costs on the shop floors.
+
+This document is developed with the assumption that the deterministic networks are deployed between enterprise sites and shop floors. They have resources available to provide latency guarantees, reliability, and link capacity over known physical distances. Thus, they can be used to deliver process control and sensor data collection remotely from an application to shop floor machinery over larger distances or the Wide Area Networks (WAN) thereby reducing the need for IT infrastructure on shop floors.
 
 ## Deterministic Networks Relevance {#detnet-rel}
 
 > Note: This section's text and explanation on DetNet can be removed.
 
+DetNet data plane framework {{!RFC8939}} describes the DetNet IP encapsulation
+into two sublayers as shown in {{fig:detnet-arch}}. The forwarding sub-layer
+allocates resources to ensure low loss, latency, and in-order delivery. In
+contrast, the service sub-layer manages packet replication, sequence numbering,
+and related functions. Together, these sublayers are described as DetNet flows,
+which serve as the aggregators for multiple application flows (app-flows).
+
+App-flows and DetNet flows are two different constructs. App-flows describe an
+end system's traffic; they initiate requests for network resources under an OT
+management application. The request for resources by app-flows and their mapping to
+DetNet flows are separate functions from the network resource reservations of
+DetNet flows. Their specifications are covered by the flow information model
+{{!RFC9016}}. Because resource requests by app-flows and allocations by DetNet
+system are provisioned prior to actual traffic transmission, a high level of
+predictability is ensured in DetNets.
+
 ~~~~drawing
 
  DetNet IP       Relay                        Relay       DetNet IP
  End System      Node                         Node        End System
-
 +----------+                                             +----------+
 |   Appl.  |<------------ End-to-End Service ----------->|   Appl.  |
 +----------+  ............                 ...........   +----------+
@@ -411,131 +443,102 @@ networks using Deterministic Network data plane architecture
                                `-----'                `-----'
 
          |<--------------------- DetNet IP --------------------->|
+
 ~~~~~
-{: #detnet-arch title="A Simple DetNet-Enabled IP Network, Ref. RFC8939"}
+{: #fig:detnet-arch title="A Simple DetNet-Enabled IP Network, Ref. RFC8939"}
 
-{{detnet-arch}} illustrates a DetNet-IP dataplane divided into two sublayers
-and is specified in {{!RFC8939}} . The forwarding sub-layer is responsible for
-resource allocation and explicit path functions, whereas the service sublayer
-provides packet replications, sequence numbering, and other functions. Within
-the Detnet nodes, resources are allocated a priori for a flow. The
-DetNet-enabled end systems originate traffic encapsulated with Detnet
-forwarding and service sub-layers; otherwise relay node will create those
-based on information received from the end system (via traffic classification).
 
-The DetNets support both asynchronous (by allocating resources for the
-observation interval) and synchronous (with repeating schedules) flow behaviors
-(Section 4.3.2 in {{!DETNET-DP=RFC8655}}). The granularity of traffic treatment
-is at the flow level specified by 6-tuple information, including DSCP.
+The traffic originating from end systems (the app-flows) is encapsulated within the DetNet flows. This encapsulation occurs at the reference point where the association or mapping between app-flows and DetNet flows is established. Specifically, in a DetNet unaware end system, the mapping will be done by the relay node (also shown in {{fig:detnet-arch}}).
 
-Realistically, leveraging DetNets for Operations and Control (OCN) traffic
-patterns {{ocn-pattern}} directly depends on how DetNets will provide network
-knowledge to the applications.
+Various other deterministic network technologies exist at lower layers such
+as TSN, 5G, and optical; This document only leverages a specific case using
+IP as a direct interface between an application and the DetNet since most
+enterprise applications use IP stack.  Other options are out of the scope of
+this work. The scope is further narrowed for DetNet unaware end systems to
+minimize changes to the existing IP-based industrial-controller applications.
 
-## DetNet related Considerations and Dependencies {#depend}
+Referring to {{fig:detnet-arch}}, an 'industrial-controller' will be one
+DetNet endpoint of the application, while field devices are the remote
+endpoints. Note the asymmetry between the compute and memory capabilities of
+the two types of endpoints, viz. industrial-controller and field-devices.
 
-A DetNet-aware node should express the network requirements as part of either
-forwarding sublayer or service sublayer. {{!DETNET-IP=RFC8939}} doesnot specify
-the interface to how those sublayers are mapped. This can be a non-trivial
-task, as an OCN-application, will first need some way to request its DetNet
-service provider (DN-SP). The DN-SP is expected to allocate resources and
-return a mapping  - possibly a DSCP (DetNet Qos) for each pair. This could be
-become a tedius scaling problem as the number of controller-device pairs start
-to grow or keep changing.
+The legacy field devices are not expected to be DetNet aware. Therefore, will
+require their adjacent gateways to take up the DetNet relay node role and
+continue to provide associated translation capabilities. Whereas the
+software-based PLC applications can be DetNet aware nodes but require greater
+flexibility than what is currently offered by the flow information model to
+support dynamic changes in the process control operations.
 
-Given that only DSCP is available, field-device pair can pose issues such as:
+## DetNet Considerations {#depend}
 
-  - How can application request the proper network-resource for each command?
-  - How can an application  receive periodic data from sensors and with what interval?
-  - What are the ways to differentiate a less sensitive (periodic) updates from
-    urgent alarms.
-  - Or  how to differentiate data received from a sensor vs an actuator (with
+The industrial control model has to support different types of traffic profiles
+for a substantial number of field devices. Configuration of each app-flow using
+{{!RFC9016}} could become a tedious scaling problem as the number of
+industrial-controller-to-field-device pairs grows or keeps changing.
+
+The current provisioning model poses issues such as:
+
+  * How can an application request the proper network resource for each
+    command?
+  * How can an application receive periodic sensor data, and with what
+    interval?
+  * What are the ways to differentiate less sensitive (periodic) updates from
+    urgent alarms?
+  * Or how to differentiate data received from a sensor vs. an actuator (with
     stringent latency requirements) and process them accordingly?
 
-These issues are described below in more detail.
+These issues and consideration are described below in more detail.
 
 ### Operator vs Application view {#app}
 
-The DetNet data plane is designed with a network-operator-centric approach. The
-operator's view on dealing with large-scale networks is discussed in
-{{!I-D.ietf-detnet-scaling-requirements}}. In order to use
-resources efficiently, flow aggregation is done. The operators in industrial
-control networks are not necessarily network experts; they simply need an
-application-side tool to dispatch their requests to the Deterministic networks'
-entry point. Especially, an OCN application may need many
-controller-field-device (ctrl-flddev) pairs to be mapped to different
-aggregates.
-
-As the number of ctrl-flddev pairs grow, their variable traffic profiles can
-become hard to manage.
-
-The Detnet service provisioning internals should be transparent to an OCN
-application. This can be achieved with a common signaling or user-to-network
-interface between the applications and DetNet.
+The DetNet is primarily designed with a network-operator-centric approach. The
+operator's view on dealing with large-scale networks is being discussed in
+{{!I-D.ietf-detnet-scaling-requirements}}. DetNet relies on flow aggregation to
+use resources efficiently. The integrated OT and IT networks will require
+simpler network provisioning at least from an application's perspective;
+preferably, a toolset or an Application Programming Interface (API) to dispatch
+their requests to the edge of the Deterministic networks.
 
 ### Flow reservation and classification {#class}
 
-Inside the DetNet, flow identification is done using IP header and DSCP
-information. These flow identifiers are then used by DetNet nodes to provide
-the corresponding traffic treatment. For a variety of commands and sensor data, latency or interval
-parameters will vary and DSCP maybe limited in expressing all the possible requirements.
+A single OCN application may require different resource requirements for each
+controller-field-device (ctrl-flddev) pairs, and will potentially interface
+with multiple field devices.
 
-{::comment}
-Accordingly, resources are provisioned over
-longer timescales, i.e., the model works for relatively predictable scenarios.
-The problem is that the control loops in {{c-loop}} may be  short messages so that
-one command is sent per packet, expecting a response from  the actuator in
-another return packet. The transmission of the next set of commands is driven
-programmably by the applications. This is how the softwarization of industrial
-processes is happening now.
-
-Perhaps, it can be stated that the provisioning resources for flows does not necessarily
-guarantee that the Detnet-specific resource contention at the instant will not occur.
-
-Moreover, for any cloud-based solution, controller may as well send commands to
-the devices from different locations (different IP addresses), thus the scale of
-provisioned flows can grow very fast.
-
-The applications in on-demand production pipelines could modify the pace and plan
-for the production programmatically based on various other factors. Therefore,
-it is not efficient to provision such networks for long periods. his should be
-understood that flow-specific resource reservation planning is not useful.
-While there is a benefit to a coarse granularity of flow classifications, there
-is also a requirement for a finer granularity of DetNet traffic treatment.
-{:/comment}
-
-Embedding requirements explicitly can provide deterministic scheduling even in
-an otherwise link that can be congested  when used with non-deterministic flows.
-
+These variations are easier to achieve with a signaling or user-to-network
+interface between the applications and DetNet. Embedding requirements
+explicitly can also help DetNet edges to make more dynamic decisions as against
+static mappings between app-flows ro DetNet-flows.
+an otherwise link that can be congested when used with non-deterministic
+flows.
 
 ### Split Traffic flows {#split}
 
-One of the most constrained design elements in today's industrial control
-systems is that data from the sensors is collected on-site and often aggregated
-before transporting
-to the cloud.  Historical reasons for this approach do not apply anymore.  Due
-to growth in sensor data, it now requires a much larger on-site storage
-infrastructure which is expensive.  Applications also expect real-time
-streaming telemetry data.  Although latency constraints are not as strict as
-for control loops, sensor data need to preserve periodicity ({{ocn-intervals}}),
-thus could use DetNet service support.
+A natural consequence of deploying with ICA-95 security architecture in
+industrial control systems is that data from the sensors is collected on-site
+and often aggregated before transporting to the cloud. For remote process
+control, this approach does not apply anymore.  Due to growth in sensor data, it
+now requires a much larger on-site storage infrastructure which is expensive.
+Applications also expect real-time streaming telemetry data. Although latency
+constraints are not as strict as for control loops, sensor data need to
+preserve periodicity ({{ocn-intervals}}), thus could use DetNet service
+support.
 
-Leveraging DetNet could eliminate split traffic flows by collecting the
-sensor data by the applications. This also allows  controllers to be run and
-operated from the cloud platforms where much more powerful compute capabilities
-and available.
+Leveraging DetNet could eliminate split traffic flows by collecting the sensor
+data by the applications. This also allows  industrial controllers to be run
+and operated from the cloud platforms where much more powerful compute
+capabilities and available.
 
 ### Provisioning for a variety of Traffic flows {#prov}
 
 Different operational scenarios have different constraints; even commands
 within the same application will have different time requirements.
 
-  - Different types of latency bounds will be required between a controller and
+  - Different types of latency bounds will be required between a 'process controller' and
     an actuator pair based on the type of end-equipment and precision
     requirements. Out-of-order message processing may lead to failures and shutdown
     of operations.  Messages may also be correlated. Therefore, time constraints
     may be applied to a single message or on a group of messages.
-
 
   - Similarly, each sensor-controller pair may come with its own interval
     requirement. Sensors emit data at regular intervals but this type of
@@ -575,12 +578,12 @@ application endpoint to the DetNet edge
 
 ## Summary of Gaps
 
- - Application view ({{app}}: An OCN application is unaware of how DetNet services are
+ - Application view ({{app}}): An OCN application is unaware of how DetNet services are
    provisioned. A common UNI between the applications and DetNet-enabled
-the network needs to be added to the current framework to better map the
+network needs to be added to the current framework to better map the
 expectations better.
 
- - Security ({{sec}}):  metadata that is related to process control and operation which will be used by the network
+ - Security ({{sec}}): of process control related metadata to be used by network
    must be secured.
  - Traffic behavior ({{prov}} and {{class}}): Within the same DetNet flow, classified via
    6-tuple, additional information/metadata must be supported so that dynamic
@@ -590,46 +593,135 @@ expectations better.
    allows  controllers to be run and operated from the cloud platforms where much
    more powerful compute capabilities are available.
 
-# DetNet Potential Approach {#approaches}
+# Operation & Control Header Option {#approaches}
 
-Remote process automation presents different types of traffic profiles and to
-deal with them within the DetNet framework, we discuss a few possibilities.
+An interface from application to network using IPv6 operation and control
+Extension header (EH) option is proposed as means for app-flow to express
+network resources with a fine granularity. Other options as YANG based
+provisioning do not scale, nor are easy to change dnamically. Since
+applications generating app-flows use IP, an IPv6 EH option provide are a more
+natural fit than other encapsulations and is specifically suitable for DetNet
+unaware end systems.
 
-The DetNet UNI will enable applications to convey specific requirements to
-DetNet-aware Network. Note that it is just an interface and is blind to the
-internal implementation of such networks.
+## System Behavior
 
-The DetNet architecture does not describe how DetNet-aware nodes can design DetNet sub-layers.
- But even from the view of an end system, the separation between
-forwarding and service sublayer functions should be maintained. This means, the DSCP should not be
-overloaded and DetNet-IP forwarding layer should be extended.
+Executing remote process automation within the DetNet framework, requires a
+management application to interface with the DetNet controller for initial
+resource-pool provisioning shown as 'MGMT' in {{fig:detnet-ind}}.
 
-## Application association to Forwarding sublayer
+This management application understands the capabilities of endsystems
+(industrial-controllers, field-device gateways) under it's control. It requests
+aggregated resource requests to the DetNet-controller. These reservations could
+be per source and destination address pairs and many app-flows between them.
 
-Applications should convey specific resource requirements to the DetNets they
-connect to. There are two potential options: (a) The DetNet Relay-node performs
-translation and binding to one of the DetNet services in the DetNet; or (b) carry
-the application-defined data over DetNet as is and enables processing on transit nodes.
+The out-of-band flow of provisioning happens in the following steps:
 
-## Encapsulation
+{:req: counter="bar" style="format (%d)"}
 
-OCN applications are expected to be IP based end stations. (MPLS DetNet will not apply). It is also reasonable to assume that the applications are IPv6 capable; therefore, Ipv6 extension headers can be used to
-request network services inband. With an IPv4 data plane, the encapsulations could potentially be over UDP; however, that is not the focus of this document. This document specifically deals with HBH IP6 extension headers mechanisms to interface with a Deterministic Network.
+{:req}
+* A management application or centralized user controller ('MGMT') is
+  responsible for the initial network resource setup with network service
+  provider entities (e.g. with the controller as explained in
+  {{!I-D.ietf-detnet-controller-plane-framework}} Section 3.2). It identifies
+  the amount and types of resources needed by the applications. This can
+  potentially follow existing DetNet YANG models or proprietory approaches.
+* A network controller allocates/provisions and maps those requests to DetNet
+  flows. It is sufficient to return the results of success or
+  failure of reservations to the MGMT function (no explicit mappings).
+* All the endsystems from then onwards should operate with in the bounds
+  of resources allocated.
+* Applications and relay nodes could employ additional monitoring mechanisms to
+  keep overall system within the bounds and prevent failures in deterministic
+  operations. MGMT function also mangages updates to network-provider about any
+  changes to the resource between source/destination leads to updates.
+* An application such as software-based industrial controller can now send
+  traffic with more specific resource requests using {{ocno}} format.
+
+
+
+As shown in {{fig:detnet-ind}}, this management interface is bidirectional to
+receive success and failure of the reservations.
+
+~~~~~
+DetNet
+End System
+   _
+ / PC\     +-----+      +-----------+            DetNet
+| App |<-->|MGMT |<====>|DETNET-CTRL|          End System
+/-----\    +-----+      +---+-------+          +------+
+| NIC |                /   |       \           |FD-GW |
++--+--+ De|tNet       /    |        \          +----+-+
+   |       UN|I+----+    +----+       +----+ DetNet |
+   |      v    |    |    |    |-+     | PE |  UNI(U)|
+   +-----------U PE +----+ P  | |     |    U--------+
+               |    |    |    | |-----|    |
+               +----+    +--+-+ |     +----+
+                            +---+
+             |<------DetNet ----------->|
+
+    PC APP: Process Controller Application
+    FD-GW:  Field device gateway
+    NSP entity: Network service provider controller
+                e,g, DetNet Controller
+~~~~~
+{: #fig:detnet-ind title="A Realistic DetNet Based Industrial Application Network"}
+
+## Scope and Limits (goals and non goals)
+
+The proposed OCN-EH solution is a generic interface to the DetNets from OT
+applications with a programmable and dynamic process automation capabilities.
+Once the high-level reservation of resources is done, DetNet should process
+the incoming traffic with OCN-EH with in its capabilities.
+
+The following are the non-goals:
+
+   -   To provide support for stringent periodic traffic schedules:
+       DetNets support both asynchronous (by allocating resources for the
+       observation interval) and synchronous flow behaviors (Section 4.3.2 in
+       {{!DETNET-DP=RFC8655}}). OCN- EH option for extremely sensitive
+       periodicity are not explicitly explored, a control plane provisioning
+       may be sufficient. Intervals are supported for sensors, emitting
+       periodic data.
+
+   -   To change field device behavior: OCN-EH solution does not expect
+       changes to field-devices. It depends on their gateways to
+       terminate DetNet flows and perform fieldbus protocol translations.
+
+   -   To provide mapping procedures: Explicit procedures for mappings and how
+       they are
+       performed, updated  on edge nodes are not discussed since they are
+       proprietory or specific to NSP domain.
+
+ Main goals:
+
+   -   To provide a programmable and extensible interface:
+       OCN applications are IP end stations. (MPLS DetNet will
+       not apply). It is reasonable to assume that the applications are IPv6
+       capable; therefore, Ipv6 extension headers can be used to request network
+       services inband. With an IPv4 data plane, the encapsulations could
+       potentially be over UDP; however, that is not the focus.
+
+   -   Application to receive errors or feedback from the network:
+       A signaling from relay node to end system can help measure application
+       performance.
+
+## Types of App-flow Requests
 
 The end system network requirement is expressed as 'OCN flow QoS'.
-Each packet carries its own unique OCN-QoS. The metadata to be transmitted to DetNet are:
+Each packet carries its own unique OCN-QoS. The metadata to be transmitted to
+DetNet are:
 
-      - Async traffic with latency information.
-      - Sync, periodic traffic
-      - urgency of messages
-      - Flowlet identification (for related packets).
+    -  Async traffic with latency information.
+    -  Sync, periodic traffic
+    -  Urgency of messages
+    -  Flowlet identification (for related packets).
 
 This can be implemented using the HBH extension header option.
 
-## Operation and Control Network Option (OCNO)
+## Operation and Control Network Option (OCNO) {#ocno}
 
    The OCN Option (OCNO) is a hop-by-hop option that can
-   be included in IPv6 for OCN traffic control extensions.
+   be included in IPv6 for OCN traffic control specification.
 
 ~~~~drawing
 
@@ -638,11 +730,13 @@ This can be implemented using the HBH extension header option.
                                    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
                                    |  Option Type  |  Opt Data Len |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   | OCNF flags     |   OCN-TC-Flowlet nonce       |  sequence     |
+   | OCNF flags                    |   OCN-TC-Flowlet nonce        |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                (bounded latency spec)                         |
+   | sequence       |        (bounded latency spec)                |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                (Delay variation spec)                         |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                (Result spec)  |                               |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~~~
 {: #ocn-detnet title="Explicit Traffic Control HBH Options"}
@@ -657,28 +751,30 @@ This can be implemented using the HBH extension header option.
   :  8-bit unsigned integer. Multiple of 8-octets.
 
   OCN Function Flags:
-  : Some flags require metadata, while others don't.  So process flags in order, if the
-flag is off,  the following metadata will not be present.
-
-     | Flag | Description                      |
-     |------:+-------------------------------- |
-     |   U  | send the message immediately. its an alarm  |
-     |   P  | periodic packet (intervals in ~ms)      |
-     |   F  | part of flowlet. see Nonce and seq  |
-     |   L  | bounded latency spec provided    |
-     |   R  | Reliability with no packet loss tolerance |
-     |   V  | Delay variation with no packet loss tolerance |
-
-{: #ocn-flags title="OCN Flags to indicate DetNet Functions"}
+  : Some flags require metadata, while others don't.  Flags are processed
+    in order from high to low order bits (left to right, from U to R), if the
+    flag is off,  the corresponding metadata will not be present.
 
 Flowlet nonce:
-:    16-bit. identifies that a packet is associated with a group of packets and shares fate.
-      as an example, an application can set the same nonce for a set of an actuator and sensors.
-     when set to 0, flow id is set to the same value in related flows. when flow id is also 0, no
-relationship exists.
+:    16-bit. identifies that a packet is associated with a group of packets and
+shares fate. as an example, an application can set the same nonce for a set of
+an actuator and sensors. when set to 0, flow id is set to the same value in
+related flows. when flow id is also 0, no relationship exists.
 
 Flowlet sequence:
 :    8-bit. sequence to be used for ordering within flowlets.
+
+     | Flag | Description                      |
+     |------:+-------------------------------- |
+     | U  | Urgent. message to be sent immediately. An alarm (no-metadata)  |
+     | I  | the flow is part of periodic packet (look for interval in ~ms) |
+     |  F | part of flowlet. see Nonce and seq  |
+     |  L | bounded latency spec provided    |
+     |  P | Reliability with no packet loss, this flag can be used by DetNet for selecting in-network reliability techniques. |
+     |  V | Delay variation with no packet loss tolerance |
+     |  R | Reply  packet to a command identified by flowlet |
+
+{:#ocn-flags title="OCN Flags to indicate DetNet Functions"}
 
 Bound Latency Spec:
 :    32-bit. Encodings, to be defined.\\
@@ -689,37 +785,83 @@ Bound Latency Spec:
 Delay Variation Spec:
 :     16-bit. for a synchronous stream, delay variation tolerance in ms.
 
-## OCNO Operation
+Interval Spec:
+:     16-bit interval field. TBD.
+
+Reply Spec:
+:     16-bit results of network service delivery. TBD.
+
+
+## OCNO Operation and Signaling
 
 ~~~~drawing
 
    OCN
  Controller         Ingress Relay        Egress Relay      OCN
 +----------+             Node                Node        fld-device
-|   Appl.  |          <----------DetNet-Service ------>   +-----+
-+----------+        ............           ...........    |Appl.|
-| OCNO-EH  :--UNI-->: Service  :-- DetNet -: Service  :   +-----+
-+----------+        +----------+           +----------+   |IPv6 |
-| Ipv6     |        |Forwarding|           |Forwarding|   +-----+
-+--------.-+        +---.------+           +----------+
-    :   : OCN scope    :                         :
-    :   +..............+                         :
-    :--------------------------------------------:
-              extended scope
+|   Appl.  |        <------------DetNet-Service ------>   +--------+
++----------+                                              |Cmd/Res.|
+| OCNO-EH  :--UNI-->+----------<<  DetNet >>              +--------+
++----------+        |          |           +----------+   | FBUS   |
+| Ipv6     |        |Forwarding|           |Forwarding|---+--------+
++--------.-+        +---.------+           +----------+       |
+    :   : OCN scope    :                                      |
+    :   +..............+                   +--------+         |
+    :--------------------------------------| DATA   |---------+
+              extended ocn scope           +--------+
+                                           |OCNO-EH |
+                                           +--------+
+                                           | Ipv6   |
+                                           +--------+
+
 ~~~~~
-{: #ocn-interface title="An interface from controller application to DetNet"}
+{: #ocn-interface title="An interface from 'process-controller' to DetNet"}
+
+The in-band work flow of traffic with EH option happens in the following steps:
+
+1. An end system (industrial controller)  uses the format described in
+  {{ocno}} to provide ocn-constraints (e.g. network latency limit) or
+  delay variation. It fills option type, len fields along with OCN
+  flags and sequence if needed.
+
+1. Platform related deterministic processing is not part of the
+  network latency in EH; Packet is tranmitted on interface connected to
+  DetNet relay node.
+
+1. DetNet relay node processes parameters, and source/destination addresses
+  associates this app-flow to DetNet flow. It may or may not remove EH
+  see {{encap_pre}}, inserts its own DetNet encapsulation (technology specific).
+
+1. In case of exception or an error, relay node could reply back to application
+   with error values.
+
+1. DetNet delivers the packet with guarantees of network resources
+   requested to the endsystem gateway connecting to field devices.
+
+1. Field device gateway performs protocol translation and deliver packet to
+   the field device.
+
+1. Observable errors, such as late delivery or inconsistent OCN header can
+  be sent to OC App from the gateway.
+
+1. Similarly, gateways insert new OCN headers, for messages originating from field devices,
+  such as alarms, sensor data.
 
 
-## OCNO Extension Header Signaling
+## OCNO EH Processing {#encap_pre}
 
-The current definition of OCNO only covers applications to DetNet unidirectional interface. It is possible to extend OCNO EH for conveying errors from DetNet to the controller as well - for example, when a service violation happened in the DetNet, the Relay node will set an error flag in OCNO EH. Field devices are considered resource-constrained and are not expected to insert or process extension headers.
-Due to flow aggregation, it is up to the DetNet operator to design mapping between an application and the DetNet.
+ - OCNO EH  can be extended for conveying errors from DetNet to the industrial controller application. For example, when a service violation
+happened in the DetNet, the Relay node will set an error flag in OCNO EH.
+- Field devices are considered resource-constrained and are not expected to insert or process extension headers.
 
-Two different options of carrying hop-by-hop options are considered.
+Two different approaches of hop-by-hop options processing are feasible.
 
- 1. EH is inserted by the application and the Relay node performs mapping to DetNet flow.
- 2. if the DetNet data plane is IPv6, then EH can be carried all the way to the last Relay node, which
-    acts as a gateway for the fld device and performs EH-specific functions.
+ 1. EH is inserted by the application and the Relay node performs simply mapping to DetNet flow.
+ 2. if the DetNet data plane is IPv6 end to end, then EH can be carried and processed all the way to the last Relay node, which
+    acts as a gateway for the fld device and performs EH processing.
+
+The document currently assumes only the first option.
+
 
 # IANA Considerations
 
