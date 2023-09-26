@@ -61,38 +61,36 @@ networks from the view of endpoints to support process control and operations.
 
 # Introduction {#intro}
 
-Process automation systems involve operating a piece of equipment (such as
-actuating and/or sensing field devices). The communication between the
-'process controllers' and field devices exhibits a well-defined set of behaviors and
-has specific characteristics: the delivery of a control-command to a
-machine must be executed within the time frame specified by a controller or
-by an application to provide reliable and secure operation.  A low or zero
-tolerance to latency and packet losses (among other things) is implied.
+Process automation systems involve operating equipment (such as actuating
+and/or sensing field devices). The communication between the 'process
+controllers' and field devices exhibit a well-defined set of behaviors and has
+specific characteristics: delivering a control-command to a machine must be
+executed within the time frame specified by a controller or an application to
+provide reliable and secure operation. A low or zero tolerance to latency and
+packet losses (among other things) is implied.
 
-The endpoints ('process controllers' and field devices) embody machine-to-machine
-communications to facilitate both remote and local process automation. In this
-document, networks that support all the characteristics of remote process
-automation are referred to as Operation and Control Networks (OCNs) for
-convenience. This document describes using DetNet to enable OCN applications
- since they provide mechanisms for guaranteed delay aware packet delivery,
-reliability, and for packet loss mitigation.
+The endpoints ('process controllers' and field devices) embody
+machine-to-machine communications to facilitate remote and local process
+automation. In this document, networks that support all the characteristics of
+remote process automation are referred to as Operation and Control Networks
+(OCNs) for convenience. This document describes using DetNet to enable OCN
+applications since they provide mechanisms for guaranteed delay-aware packet
+delivery, reliability, and packet loss mitigation.
 
 This document defines the interface between an OCN application and the DetNet
 framework. i.e., using DetNet services for communication between the
 controllers and the field devices. This interface is used by an application to
 express its network-specific requirements. This document presents the
-perspective of an end system. Because IP network stack is widely used by
-general-purpose applications and provides more connection flexibility to end
-systems, the scope of our discussion is specific to the IP-enabled
-DetNet data planes {{!DETNET-DP=RFC8655}}. For the other type of field devices,
-a service level proxy is assumed (section  4.1 in RFC8655).
+perspective of an end system. Because general-purpose applications widely use
+IP network stack and provide more connection flexibility to end systems, the
+scope of our discussion is specific to the IP-enabled DetNet data planes
+{{!DETNET-DP=RFC8655}}. A proxy function is assumed for the other type of field
+devices and service levels (section 4.1 in RFC8655).
 
-Mapping OCNs to DetNet helps with developing a better understanding of how
-DetNets can be used in such scenarios. To this end, the document provides a
-background on {{background}} the type of traffic patterns in OCN applications.
-It proposes an interface between an application and DetNet, and a potential
-solution direction to support OCN traffic patterns over DetNet, as covered in
-{{approaches}}.
+Mapping OCNs to DetNet helps better understand how DetNets can be used in such
+scenarios. The document provides a background on the type of traffic patterns
+in OCN applications. It proposes an interface between an application and DetNet
+and a potential solution direction to support OCN traffic patterns over DetNet.
 
 # Terminology
 
@@ -104,7 +102,7 @@ monitoring and/or control of devices, processes, and events. Examples include
 industrial control systems, building management systems, fire control systems,
 and physical access control mechanisms. Source: {{NIST-OT}}
 
-- process controller:
+- Industrial controller or process controller:
   : Is a logic control function used in process automation and control systems.
 A process controller maintains the operational requirement of a process and
 performs functions similar to programmable logic controllers (PLCs) but it can
@@ -163,14 +161,14 @@ with exchanging data with the applications.
 
 A factory floor is divided into cell sites. The PLCs or other types of
 controllers are physically located close to the equipment in the cell sites.
-The collection of monitoring, status, and sensing data is first done on the site
+Monitoring, status, and sensing data are collected on the site
 and then transmitted over secure channels to the data applications for
 aggregation and further processing. These applications can be hosted
-in remote cloud infrastructure, but are also often hosted within a
+in remote cloud infrastructure but are often hosted within a
 limited domain environment, controlled by a single operator, like
-on-premise, at the edge or in a private cloud. Both options gain
-from infrastructure that scales out, and has elastic compute and storage
-resources, so they will both be referred to as cloud in the following sections.
+on-premise, at the edge, or in a private cloud. Both options gain
+from infrastructure that scales out and has elastic computing and storage
+resources so they will be referred to as cloud in the following sections.
 
 ~~~~~drawing
 
@@ -194,11 +192,11 @@ resources, so they will both be referred to as cloud in the following sections.
 ~~~~~
 {: #icn-arch title="Functions in Industrial Control Networks"}
 
-What is changing now is that data applications are integrating process control
-functions to improve automation and to make real-time decisions,
-programmatically. The equipment control and  collection of data generated by
-the sensors should be possible over small or large-scale deterministic networks
-as illustrated in {{new-arch}}.
+Data applications can integrate softwarized process control
+functions to improve automation and make programmatic real-time decisions. The
+equipment control and collection of data generated by the sensors should be
+possible over small or large-scale deterministic networks as illustrated in
+{{new-arch}}.
 
 ~~~~~drawing
 
@@ -218,13 +216,13 @@ as illustrated in {{new-arch}}.
 ~~~~~
 {: #new-arch title="Converged Cloud based Industrial Control Networks"}
 
-One particular motivation is to provide the behavior of a field bus between
-the cloud and the actuators/sensors with the same assurance of reliability and
-latency, albeit over wide area networks (WAN). This is evident from many
-industrial control applications, such as factory automation {{FACTORY}}, PLC
-virtualization {{VIRT-PLC}}, power grid operations {{PTP-GRID}}, etc. that are now
-expected to operate in the cloud by leveraging virtualization and shared
-infrastructure wherever possible.
+One particular motivation is to provide the behavior of a field bus between the
+cloud and the actuators/sensors. i.e., with the same assurance of reliability
+and latency, albeit over wide area networks (WAN). Many industrial control
+applications, such as factory automation {{FACTORY}}, PLC virtualization
+{{VIRT-PLC}}, power grid operations {{PTP-GRID}}, etc.,  are now expected to
+operate in the cloud by leveraging virtualization and shared infrastructure
+wherever possible.
 
 ## Connected Process-Controllers, Sensors and Actuators
 
@@ -249,14 +247,14 @@ devices remotely from the 'process controller' while meeting all the
 requirements (or key performance indicators - KPIs) necessary for successful
 command execution. The actuator participates in a closed control loop as needed.
 
-- A sensor emit periodic data from the sensors. It may intermittently provide
+- A sensor emit periodic sensor data. It may intermittently provide
 asynchronous readings upon request from the 'process controller'. Sensors may report
-urgent messages regarding malfunctioning in certain equipment, cell-sites, or
+urgent messages regarding malfunctioning in certain equipment, cell sites, or
 zones.
 
 In many control systems, there is at least one 'process controller' (or server) entity on
 one end and two other entities - the sensors and actuators on the other end.
-The communication with sensors and actuators is through the 'process controller' entity;
+The communication with sensors and actuators is through a 'process controller' application;
 as such data applications do not directly interact with the field devices.
 Neither actuators nor sensors perform decision-making tasks. This
 responsibility belongs to the 'process controller'.
@@ -349,11 +347,10 @@ indications that the equipment is misbehaving.
 
 ### Ordering
 
-In real-time process control communications, out of order processing of related
-messages will lead to costly failures of operations.  For example, Messages
+In real-time process control communications, out-of-order processing of related
+messages will lead to costly operations failures.  For example, messages
 such as request and reply, or a sequence of commands to different endpoints may
-be related in some
-way. therefore, both time constraints and order must be preserved.
+be related in the application work flow, therefore, both time constraints and order must be preserved.
 
 The network should be capable of supporting sporadic on-demand short-term flows.
 This does not imply instantaneous resource provisioning, instead it would be
@@ -370,8 +367,7 @@ means the network must pace packets that may arrive early.
 
 Besides latency constrained and periodic messages, sensors also report failures
 as fault notifications, such as pressure valve failure, abnormally high
-humidity, etc. These messages must be delivered with utmost urgency and
-immediately.
+humidity, etc. These messages must be delivered immediately and with the utmost urgency.
 
 
 ## Communication Patterns
@@ -380,10 +376,10 @@ Control systems follow a specific communication discipline. The field devices
 (sensors and actuators) are always controlled, i.e., interact with the system
 through 'process controllers' in the following manner:-
 
-- Sensor to 'process controller': data emitted at periodic interval providing
+- Sensor to 'process controller': data emitted at periodic intervals providing
   status/health of the environment or equipment. The  traffic volume for this
 communication is determined by the payload size of each  sensor data and the
-interval. These are a kind of synchronous Detnet flows but with much higher time intervals; still the inter-packet gap should be minimum.
+interval. These are a kind of synchronous Detnet flows but with much higher time intervals; still the inter-packet gap should be minimal.
 
 - Process controller to/from actuator: the commands/instructions to write or read.
   Actuators generally do not initiate a command unless requested by the
@@ -400,11 +396,23 @@ be pre-programmed).
 
 # Industrial Control Application Interfaces to DetNets {#gaps}
 
-Note: use which term for disambiguation? process-controller or industrial-controller?
+Note: use which term? process-controller or industrial-controller?
 
-Current industrial automation solutions utilize a split approach. Industrial-controllers are placed close to the equipment to achieve operational accuracy, whereas actual process instructions are received through other means possibly involving human interface. Similarly, sensor data is first acquired on-site then transmitted in bulk to the enterprise cloud or remote site for further processing. Such approaches lead to increase in IT infrastructure costs on the shop floors.
+Current industrial automation solutions utilize a split approach.
+industrial-controllers are placed close to the equipment to achieve operational
+accuracy, whereas actual process instructions are received through other means
+possibly involving human interface. Similarly, sensor data is first acquired
+on-site then transmitted in bulk to the enterprise cloud or remote site for
+further processing. Such approaches lead to increase in IT infrastructure costs
+on the shop floors.
 
-This document is developed with the assumption that the deterministic networks are deployed between enterprise sites and shop floors. They have resources available to provide latency guarantees, reliability, and link capacity over known physical distances. Thus, they can be used to deliver process control and sensor data collection remotely from an application to shop floor machinery over larger distances or the Wide Area Networks (WAN) thereby reducing the need for IT infrastructure on shop floors.
+This document is developed with the assumption that the deterministic networks
+are deployed between enterprise sites and shop floors. They have resources
+available to provide latency guarantees, reliability, and link capacity over
+known physical distances. Thus, they can be used to deliver process control and
+sensor data collection remotely from an application to shop floor machinery
+over larger distances or the Wide Area Networks (WAN) thereby reducing the need
+for IT infrastructure on shop floors.
 
 ## Deterministic Networks Relevance {#detnet-rel}
 
@@ -423,7 +431,7 @@ management application. The request for resources by app-flows and their mapping
 DetNet flows are separate functions from the network resource reservations of
 DetNet flows. Their specifications are covered by the flow information model
 {{!RFC9016}}. Because resource requests by app-flows and allocations by DetNet
-system are provisioned prior to actual traffic transmission, a high level of
+systems are provisioned before actual traffic transmission, a high level of
 predictability is ensured in DetNets.
 
 ~~~~drawing
@@ -448,10 +456,12 @@ predictability is ensured in DetNets.
 {: #fig:detnet-arch title="A Simple DetNet-Enabled IP Network, Ref. RFC8939"}
 
 
-The traffic originating from end systems (the app-flows) is encapsulated within the DetNet flows. This encapsulation occurs at the reference point where the association or mapping between app-flows and DetNet flows is established. Specifically, in a DetNet unaware end system, the mapping will be done by the relay node (also shown in {{fig:detnet-arch}}).
+The traffic originating from end systems (the app-flows) is encapsulated within the DetNet flows. This encapsulation occurs at the reference point where the association or mapping between app-flows and DetNet flows is established.
+Specifically, in a DetNet unaware end system, the relay node will do the
+mapping (also shown in {{fig:detnet-arch}}).
 
 Various other deterministic network technologies exist at lower layers such
-as TSN, 5G, and optical; This document only leverages a specific case using
+as TSN, 5G, and optical. This document only leverages a specific case using
 IP as a direct interface between an application and the DetNet since most
 enterprise applications use IP stack.  Other options are out of the scope of
 this work. The scope is further narrowed for DetNet unaware end systems to
@@ -464,7 +474,7 @@ the two types of endpoints, viz. industrial-controller and field-devices.
 
 The legacy field devices are not expected to be DetNet aware. Therefore, will
 require their adjacent gateways to take up the DetNet relay node role and
-continue to provide associated translation capabilities. Whereas the
+continue to provide associated translation capabilities. Whereas
 software-based PLC applications can be DetNet aware nodes but require greater
 flexibility than what is currently offered by the flow information model to
 support dynamic changes in the process control operations.
@@ -474,7 +484,7 @@ support dynamic changes in the process control operations.
 The industrial control model has to support different types of traffic profiles
 for a substantial number of field devices. Configuration of each app-flow using
 {{!RFC9016}} could become a tedious scaling problem as the number of
-industrial-controller-to-field-device pairs grows or keeps changing.
+industrial-controller-to-field-device pairs grow or keep changing.
 
 The current provisioning model poses issues such as:
 
@@ -487,7 +497,7 @@ The current provisioning model poses issues such as:
   * Or how to differentiate data received from a sensor vs. an actuator (with
     stringent latency requirements) and process them accordingly?
 
-These issues and consideration are described below in more detail.
+These issues and considerations are described below in more detail.
 
 ### Operator vs Application view {#app}
 
@@ -516,7 +526,7 @@ flows.
 
 A natural consequence of deploying with ICA-95 security architecture in
 industrial control systems is that data from the sensors is collected on-site
-and often aggregated before transporting to the cloud. For remote process
+and often aggregated before being transported to the cloud. For remote process
 control, this approach does not apply anymore.  Due to growth in sensor data, it
 now requires a much larger on-site storage infrastructure which is expensive.
 Applications also expect real-time streaming telemetry data. Although latency
@@ -524,14 +534,15 @@ constraints are not as strict as for control loops, sensor data need to
 preserve periodicity ({{ocn-intervals}}), thus could use DetNet service
 support.
 
-Leveraging DetNet could eliminate split traffic flows by collecting the sensor
-data by the applications. This also allows  industrial controllers to be run
-and operated from the cloud platforms where much more powerful compute
-capabilities and available.
+Leveraging DetNet could eliminate split traffic flows by collecting
+the sensor data by the applications.  This also allows industrial
+controllers to run and operate from cloud platforms with
+much more powerful computing capabilities.
+
 
 ### Provisioning for a variety of Traffic flows {#prov}
 
-Different operational scenarios have different constraints; even commands
+Different operational scenarios have other constraints; even commands
 within the same application will have different time requirements.
 
   - Different types of latency bounds will be required between a 'process controller' and
@@ -556,7 +567,7 @@ DetNet flow, they will receive the same treatment, regardless if one has the
 shorter latency than the other and may end up behind a flowlet with longer
 latency value. On the other hand, if an OCN flowlet have packets with different
 latency values, they could end up in different DetNet flow and may not reach
-destination in a specific order.
+the destination in a specific order.
 
 
 ### Security {#sec}
@@ -624,7 +635,7 @@ The out-of-band flow of provisioning happens in the following steps:
   provider entities (e.g. with the controller as explained in
   {{!I-D.ietf-detnet-controller-plane-framework}} Section 3.2). It identifies
   the amount and types of resources needed by the applications. This can
-  potentially follow existing DetNet YANG models or proprietory approaches.
+  potentially follow existing DetNet YANG models or proprietary approaches.
 * A network controller allocates/provisions and maps those requests to DetNet
   flows. It is sufficient to return the results of success or
   failure of reservations to the MGMT function (no explicit mappings).
@@ -699,11 +710,11 @@ The following are the non-goals:
        not apply). It is reasonable to assume that the applications are IPv6
        capable; therefore, Ipv6 extension headers can be used to request network
        services inband. With an IPv4 data plane, the encapsulations could
-       potentially be over UDP; however, that is not the focus.
+       be over UDP; however, that is not the focus.
 
    -   Application to receive errors or feedback from the network:
-       A signaling from relay node to end system can help measure application
-       performance.
+       A signaling from the relay node to the end system can help
+       measure application performance.
 
 ## Types of App-flow Requests
 
@@ -756,13 +767,14 @@ This can be implemented using the HBH extension header option.
     flag is off,  the corresponding metadata will not be present.
 
 Flowlet nonce:
-:    16-bit. identifies that a packet is associated with a group of packets and
-shares fate. as an example, an application can set the same nonce for a set of
-an actuator and sensors. when set to 0, flow id is set to the same value in
-related flows. when flow id is also 0, no relationship exists.
+:     16-bit. Identifies that a packet is associated with a group of
+      packets and shares fate. For example, an application can set the
+      same nonce for a set of actuators and sensors. When set to 0,
+      flow-id is set to the same value in related flows. When flow-id is
+      also 0, no relationship exists.
 
 Flowlet sequence:
-:    8-bit. sequence to be used for ordering within flowlets.
+:    8-bit. Sequence to be used for ordering within flowlets.
 
      | Flag | Description                      |
      |------:+-------------------------------- |
@@ -817,23 +829,23 @@ Reply Spec:
 ~~~~~
 {: #ocn-interface title="An interface from 'process-controller' to DetNet"}
 
-The in-band work flow of traffic with EH option happens in the following steps:
+The workflow of traffic with EH option happens in the following steps:
 
 1. An end system (industrial controller)  uses the format described in
   {{ocno}} to provide ocn-constraints (e.g. network latency limit) or
   delay variation. It fills option type, len fields along with OCN
   flags and sequence if needed.
 
-1. Platform related deterministic processing is not part of the
+1. Platform logic related deterministic processing is not part of the
   network latency in EH; Packet is tranmitted on interface connected to
   DetNet relay node.
 
 1. DetNet relay node processes parameters, and source/destination addresses
-  associates this app-flow to DetNet flow. It may or may not remove EH
-  see {{encap_pre}}, inserts its own DetNet encapsulation (technology specific).
+  associate an app-flow to DetNet flow. It may or may not remove EH
+  see {{encap_pre}}, and inserts its own DetNet encapsulation (technology specific).
 
-1. In case of exception or an error, relay node could reply back to application
-   with error values.
+1. In case of known exceptions or errors, the relay node could reply to application
+   with hints (Reply flag set).
 
 1. DetNet delivers the packet with guarantees of network resources
    requested to the endsystem gateway connecting to field devices.
@@ -844,20 +856,20 @@ The in-band work flow of traffic with EH option happens in the following steps:
 1. Observable errors, such as late delivery or inconsistent OCN header can
   be sent to OC App from the gateway.
 
-1. Similarly, gateways insert new OCN headers, for messages originating from field devices,
-  such as alarms, sensor data.
+1. Similarly, gateways insert new OCN headers for messages originating from
+   field devices, such as alarms or other sensor data.
 
 
 ## OCNO EH Processing {#encap_pre}
 
  - OCNO EH  can be extended for conveying errors from DetNet to the industrial controller application. For example, when a service violation
-happened in the DetNet, the Relay node will set an error flag in OCNO EH.
+happened in the DetNet, relay node will set an error flag in OCNO EH.
 - Field devices are considered resource-constrained and are not expected to insert or process extension headers.
 
 Two different approaches of hop-by-hop options processing are feasible.
 
- 1. EH is inserted by the application and the Relay node performs simply mapping to DetNet flow.
- 2. if the DetNet data plane is IPv6 end to end, then EH can be carried and processed all the way to the last Relay node, which
+ 1. EH is inserted by the application. The relay node performs mapping to DetNet flow.
+ 2. if the DetNet data plane is IPv6 end to end, then EH can be carried and processed on each hop to the last relay node, which
     acts as a gateway for the fld device and performs EH processing.
 
 The document currently assumes only the first option.
